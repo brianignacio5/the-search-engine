@@ -33,7 +33,7 @@ In charge of building a term dictionary or index based on documents links, term 
 ####Ideas of indexes to build
 
 1.Keep indexes of titles , ISBN and Body (Content) (Maybe just one big index?)
-⋅⋅* Keep additional fields for each term: **Title, ISBN, Type (Conference, Journal, Author), Content** for additional ranking.
+  * Keep additional fields for each term: **Title, ISBN, Type (Conference, Journal, Author), Content** for additional ranking.
 
 ###Query Parser
 
