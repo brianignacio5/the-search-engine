@@ -16,11 +16,11 @@ Website crawler and attached search engine for the results.
   2. Define recall (numbers of docs to return for page)
 ##Parts of the search engine
 
-#Web Crawler
+###Web Crawler
 
 In charge of crawling the websites html files in a filedirectory in the server.
 
-##Web crawler elements of design.
+####Web crawler elements of design.
 
 ###Parser
 
