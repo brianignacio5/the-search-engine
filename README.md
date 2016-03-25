@@ -1,6 +1,21 @@
 # the-search-engine
 Website crawler and attached search engine for the results.
 
+## Testing
+
+Is done with Nose
+https://www.google.de/search?q=python+nosetests&gws_rd=ssl
+
+## Later - Things to do later
+
+
+
+
+### word preprocessing
+
+In the parser, change words like "writing" to "writ" so if a user searches for "write", it will be found (by converting it as well to "writ").
+Also possible to tweak on -: "Hola WHATS-up" -> "hola whats up whatsup whats-up"
+
 ## Main Idea so far of search engine workflow
 
 1. Web crawler crawl the website and output file directory with pages.
