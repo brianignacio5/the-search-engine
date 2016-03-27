@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from setuptools import find_packages, setup
 
 EXCLUDE_FROM_PACKAGES = []
@@ -14,5 +15,5 @@ setup(
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
     scripts=[],
-    requires=['requests', 'nose']
+    install_requires=['requests', 'nose', 'lxml']
 )
