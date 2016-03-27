@@ -4,6 +4,8 @@ import uuid
 
 from lxml import etree
 
+from tsg.config import PARSED_DIR
+
 
 def extract_content(input_file):
     main_xpath = '//div[@id="main"]//text()'
@@ -23,7 +25,7 @@ def parse_text(unparsed):
     return parsed.strip()
 
 
-def parse_document(document_type, input_path, output_path):
+def parse_document(document_type, input_path):
     title, words = extract_content(input_path)
     parsed = parse_text(words)
     data = {
@@ -33,6 +35,7 @@ def parse_document(document_type, input_path, output_path):
         'uuid': str(uuid.uuid4()),
         'type': document_type
     }
+    output_path = '{}{}.json'.format(PARSED_DIR, data['uuid'])
 
     with open(output_path, 'w') as output_file:
         json.dump(data, output_file)

@@ -15,5 +15,5 @@ setup(
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
     scripts=[],
-    install_requires=['requests', 'nose', 'lxml']
+    install_requires=['requests', 'nose', 'lxml', 'mock']
 )
