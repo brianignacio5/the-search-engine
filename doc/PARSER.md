@@ -12,7 +12,7 @@ Reads html files and converts them to somehow structured JSON with parsed conten
 
 ### Content
 
-content is just a string of parsed worsed (lower cased) seperated by spaces.
+content is just a string of parsed words (lower cased) seperated by spaces.
 
 Test:
 
