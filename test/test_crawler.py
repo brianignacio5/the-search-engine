@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-import nose
-
-from tsg.crawler import crawl_site, crawl_urls,crawl_authors
+from tsg.crawler import crawl_site, crawl_urls
 import os
 import requests
 from tsg.config import RAW_DIR
+
 
 def test_crawl_urls():
     url = 'http://dblp.uni-trier.de/pers?pos=1'
@@ -12,7 +10,6 @@ def test_crawl_urls():
     assert len(urls) == 300
     assert urls[:2] == ['http://dblp.uni-trier.de/pers/hd/a/A:Almaaf_Bader_Ali',
                         'http://dblp.uni-trier.de/pers/hd/a/A:Ambha']
-    print(urls[-1])
     assert urls[-1] == 'http://dblp.uni-trier.de/pers/hd/a/Aaltonen:Viljakaisa'
 
     # Hola soy un journal
@@ -35,10 +32,17 @@ def test_crawl_site():
     with open(filename) as f:
         assert f.read() == webpage.text
 
-def test_crawl_authors():
-    authors_number = crawl_authors()
-    assert authors_number > 1721946 
 
+def test_crawl_site_html_suffix():
+    url = 'http://dblp.uni-trier.de/db/journals/tap/tap7.html'
+    filename = RAW_DIR + 'tap_tap7.html'
 
-if __name__ == "__main__":
-    nose.run()
+    assert not os.path.exists(filename)
+
+    crawl_site(url)
+
+    webpage = requests.get(url)
+
+    assert os.path.exists(filename)
+    with open(filename) as f:
+        assert f.read() == webpage.text

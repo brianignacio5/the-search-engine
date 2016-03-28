@@ -1,6 +1,12 @@
 # the-search-engine
 Website crawler and attached search engine for the results.
 
+## TODO
+
+Handle this:
+http://dblp.uni-trier.de/db/journals/phat/
+and all other journals
+
 ## Testing
 
 Is done with Nose
@@ -9,6 +15,7 @@ https://www.google.de/search?q=python+nosetests&gws_rd=ssl
 ## Later - Things to do later
 
 Instead of having different indexes, we can just multiply the number of occurences of a word by n(say 4) if it appears in a title to boost the title's weight.
+
 
 ### word preprocessing
 
