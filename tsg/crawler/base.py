@@ -52,4 +52,4 @@ def crawl_loop(category):
         for link in links:
             crawl_site(link, category)
         n += pagination
-        return n
+    return n
