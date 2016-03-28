@@ -22,4 +22,15 @@ def crawl_urls(url):
       authors_urls.append(author_url)
    return authors_urls
 
+def crawl_authors():
+    n = 1
+    authors300 = []
+    while True:
+        authors300 = crawl_urls("http://dblp.uni-trier.de/pers?pos=" + str(n))
+        if len(authors300) < 1:
+            break
+        for author in authors300:
+            crawl_site(author)
+        n += 300
+        return n
 

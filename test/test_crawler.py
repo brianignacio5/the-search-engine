@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import nose
 
-from tsg.crawler import crawl_site, crawl_urls
+from tsg.crawler import crawl_site, crawl_urls,crawl_authors
 import os
 import requests
 from tsg.config import RAW_DIR
@@ -14,6 +14,9 @@ def test_crawl_urls():
                         'http://dblp.uni-trier.de/pers/hd/a/A:Ambha']
     print(urls[-1])
     assert urls[-1] == 'http://dblp.uni-trier.de/pers/hd/a/Aaltonen:Viljakaisa'
+
+    # Hola soy un journal
+    'http://dblp.uni-trier.de/db/journals/?pos={}'
 
     #  TODO: do the test for journals and conferences as well
 
@@ -31,6 +34,10 @@ def test_crawl_site():
     assert os.path.exists(filename)
     with open(filename) as f:
         assert f.read() == webpage.text
+
+def test_crawl_authors():
+    authors_number = crawl_authors()
+    assert authors_number > 1721946 
 
 
 if __name__ == "__main__":
