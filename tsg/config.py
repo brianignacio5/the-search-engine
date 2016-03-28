@@ -20,3 +20,5 @@ os.makedirs(INTERMEDIATE_DIR, exist_ok=True)
 
 FIELDS = ['type', 'title', 'isbn', 'content']
 CSV_HEADER = ','.join(['uuid'] + FIELDS)
+
+DICTIONARY_PATH = DATA_DIR + 'dictionary.dat'
