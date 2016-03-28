@@ -4,3 +4,4 @@ tsg.egg-info/
 __pycache__/
 *.html
 data/
+*~
