@@ -14,7 +14,7 @@ def parse_term(term_file, N):
     term_df['sum'] = term_df.sum(axis=1)
     term_df['tf-idf'] = (np.log10(term_df['sum'])+1)*math.log10(N/len(term_df))
 
-    term_df.sort('tf-idf', ascending=False)
+    term_df.sort_values('tf-idf', ascending=False)
 
     pairs = term_df.apply(lambda row: '{}:{}'.
                           format(row.name, row['tf-idf']),

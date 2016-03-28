@@ -5,14 +5,15 @@ from tsg.config import RAW_DIR
 import logging
 
 
-def crawl_site(url):
+def crawl_site(url, category):
     logging.info('Downloading URL {}'.format(url))
     webpage = requests.get(url)
     url_parts = re.search('([^/]*)/([^/]*)$', url).groups()
-    filename = '{}_{}{}'.format(url_parts[0],
-                                url_parts[1],
-                                '' if url_parts[1][-5:] == '.html'
-                                else'.html')
+    filename = '{}_{}_{}{}'.format(category,
+                                   url_parts[0],
+                                   url_parts[1],
+                                   '' if url_parts[1][-5:] == '.html'
+                                   else'.html')
 
     doc_path = RAW_DIR + filename
     with open(doc_path, 'w') as f:
@@ -30,13 +31,13 @@ def crawl_urls(url):
 
 def crawl_loop(category):
 
-    if category == 'journals':
+    if category == 'journal':
         url = 'http://dblp.uni-trier.de/db/journals/?pos={}'
         pagination = 100
-    elif category == 'authors':
+    elif category == 'author':
         url = 'http://dblp.uni-trier.de/pers?pos={}'
         pagination = 300
-    elif category == 'conferences':
+    elif category == 'conference':
         url = 'http://dblp.uni-trier.de/db/conf/?pos={}'
         pagination = 100
     else:
@@ -49,6 +50,6 @@ def crawl_loop(category):
             logging.warn('Didn\' find any links')
             break
         for link in links:
-            crawl_site(link)
+            crawl_site(link, category)
         n += pagination
         return n

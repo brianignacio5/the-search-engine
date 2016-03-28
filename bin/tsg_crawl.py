@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 def main():
     parser = argparse.ArgumentParser(description='Crawl one category')
     parser.add_argument('category',
-                        choices=['journals', 'authors', 'conferences'])
+                        choices=['journal', 'author', 'conference'])
 
     args = parser.parse_args()
 
