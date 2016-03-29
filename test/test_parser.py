@@ -28,7 +28,8 @@ def test_extract_words():
         extracted_words_target = json.load(f)
     title, words = extract_content(input_file)
     eq_(extracted_words_target['words'], words)
-    eq_(title, 'Foundations and Trends in Machine Learning, Volume 2')
+    eq_(title,
+        'Foundations and Trends in Machine Learning, Volume 2 slash/word')
 
 
 @mock.patch('uuid.uuid4', return_value=TEST_UUID)
@@ -37,6 +38,8 @@ def test_parse_document(uuid4):
     target_output_file = 'test/files/ftml_ftml2_target.json'
     output_file = '{}{}.json'.format(config.PARSED_DIR, str(TEST_UUID))
     #  url = 'http://dblp.uni-trier.de/db/journals/ftml/ftml2.html'
+    #
+
 
     with open(target_output_file) as f:
         target_dict = json.load(f)
