@@ -1,13 +1,13 @@
 from lxml import html
 import requests
 import re
+import os
 from tsg.config import RAW_DIR
 import logging
 
 
 def crawl_site(url, category):
     logging.info('Downloading URL {}'.format(url))
-    webpage = requests.get(url)
     url_parts = re.search('([^/]*)/([^/]*)$', url).groups()
     filename = '{}_{}_{}{}'.format(category,
                                    url_parts[0],
@@ -16,6 +16,11 @@ def crawl_site(url, category):
                                    else'.html')
 
     doc_path = RAW_DIR + filename
+    if os.path.isfile(doc_path):
+        logging.warn('File {} exists already. Skipping'.format(doc_path))
+        return
+
+    webpage = requests.get(url)
     with open(doc_path, 'w') as f:
         f.write(webpage.text)
 
