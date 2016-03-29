@@ -6,15 +6,15 @@ For the beginning ONE index, combining ALL the stuff.
 
 ## Dictionary
 
-term1 doc1:tf-idf,doc2:tf-idf   <- ordered by tf-idf
-term2 doc5:tf-idf,doc7:tf-idf,..   <- ordered by tf-idf
+term1: doc1:tf-idf,doc2:tf-idf   <- ordered by tf-idf
+term2: doc5:tf-idf,doc7:tf-idf,..   <- ordered by tf-idf
 
 ##  Term Hash
 
-AFTER creating the dictionary, we create a hashfile like this:
+AFTER creating the dictoionary, we create a hashfile like this:
 
-term1 byte-position
-term2 byte-position
+term1: byte-position
+term2: byte-position
 
 This can be read by the the searcher to find the positions of the terms in the dictionary faster.
 
