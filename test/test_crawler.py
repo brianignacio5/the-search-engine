@@ -14,6 +14,23 @@ def test_crawl_urls():
 
     #  TODO: do the test for journals and conferences as well
 
+    url_journals = 'http://dblp.uni-trier.de/db/journals/?pos=1'
+    url_journals = crawl_urls(url_journals)
+    print(url_journals[:2])
+    assert len(url_journals) == 100
+    print(url_journals[:2])
+    assert url_journals[:2] == ['http://dblp.uni-trier.de/db/journals/ij3dim',
+                                'http://dblp.uni-trier.de/db/journals/4or']
+    assert url_journals[-1] == 'http://dblp.uni-trier.de/db/journals/jaif'
+
+    # Conferences
+    url_conferences = 'http://dblp.uni-trier.de/db/conf/?pos=1'
+    url_conferences = crawl_urls(url_conferences)
+    assert len(url_conferences) == 100
+
+    assert url_conferences[:2] == ['http://dblp.uni-trier.de/db/conf/3dpvt',
+                                    'http://dblp.uni-trier.de/db/conf/3dgis']
+    assert url_conferences[-1] == 'http://dblp.uni-trier.de/db/conf/ACMse'
 
 def test_crawl_site():
     url = 'http://dblp.uni-trier.de/pers/hd/w/Walker:David'
@@ -30,16 +47,16 @@ def test_crawl_site():
         assert f.read() == webpage.text
 
 
-def test_crawl_site_html_suffix():
-    url = 'http://dblp.uni-trier.de/db/journals/tap/tap7.html'
-    filename = RAW_DIR + 'journal_tap_tap7.html'
+# def test_crawl_site_html_suffix():
+#     url = 'http://dblp.uni-trier.de/db/journals/tap/tap7.html'
+#     filename = RAW_DIR + 'journal_tap_tap7.html'
 
-    assert not os.path.exists(filename)
+#     assert not os.path.exists(filename)
 
-    crawl_site(url, 'journal')
+#     crawl_site(url, 'journal')
 
-    webpage = requests.get(url)
+#     webpage = requests.get(url)
 
-    assert os.path.exists(filename)
-    with open(filename) as f:
-        assert f.read() == webpage.text
+#     assert os.path.exists(filename)
+#     with open(filename) as f:
+#         assert f.read() == webpage.text
