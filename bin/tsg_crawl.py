@@ -13,10 +13,13 @@ def main():
     parser.add_argument('category',
                         choices=['journal', 'author', 'conference'])
 
+    parser.add_argument('--startnumber', dest='n', default=1, type=int,
+                    help='Start crawling from given position instead of one')
+
     args = parser.parse_args()
 
 
-    crawl_loop(args.category)
+    crawl_loop(args.category, args.n)
 
 
 

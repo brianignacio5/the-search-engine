@@ -34,7 +34,7 @@ def crawl_urls(url):
     return links
 
 
-def crawl_loop(category):
+def crawl_loop(category, n=1):
 
     if category == 'journal':
         url = 'http://dblp.uni-trier.de/db/journals/?pos={}'
@@ -48,7 +48,6 @@ def crawl_loop(category):
     else:
         raise ValueError('category must have one of the three!')
 
-    n = 1
     while True:
         links = crawl_urls(url.format(str(n)))
         if len(links) < 1:

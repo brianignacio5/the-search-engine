@@ -3,7 +3,7 @@ import requests
 import time
 import datetime
 
-from config import THROTTLE_SECONDS
+from tsg.config import THROTTLE_SECONDS
 
 
 def get_site(url):
