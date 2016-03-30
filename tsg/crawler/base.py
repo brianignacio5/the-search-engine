@@ -1,9 +1,9 @@
 from lxml import html
-import requests
 import re
 import os
-from tsg.config import RAW_DIR
 import logging
+from tsg.config import RAW_DIR
+from tsg.crawler.downloader import get_site
 
 
 def crawl_site(url, category):
@@ -20,7 +20,7 @@ def crawl_site(url, category):
         logging.warn('File {} exists already. Skipping'.format(doc_path))
         return
 
-    webpage = requests.get(url)
+    webpage = get_site(url)
     with open(doc_path, 'w') as f:
         f.write(webpage.text)
 
@@ -28,7 +28,7 @@ def crawl_site(url, category):
 def crawl_urls(url):
 
     logging.info('Downloading URL {}'.format(url))
-    webpage = requests.get(url)
+    webpage = get_site(url)
     tree = html.fromstring(webpage.content)
     links = tree.xpath("//div[contains(@id,'output')]//ul/li/a/@href")
     return links

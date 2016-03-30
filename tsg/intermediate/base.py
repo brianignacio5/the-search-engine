@@ -1,5 +1,6 @@
 import json
 import os
+import logging
 
 from tsg.config import PARSED_DIR, INTERMEDIATE_DIR, FIELDS, CSV_HEADER
 
@@ -38,6 +39,7 @@ def generate_intermediate(file_uuid):
 
         with open(term_filename, 'a') as f:
             if needs_header:
+                logging.info('Creating new index file {}'.format(term_filename))
                 f.write(CSV_HEADER+'\n')
 
             csv_line = '{},{}\n'.format(

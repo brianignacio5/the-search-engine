@@ -22,3 +22,4 @@ FIELDS = ['type', 'title', 'isbn', 'content']
 CSV_HEADER = ','.join(['uuid'] + FIELDS)
 
 DICTIONARY_PATH = DATA_DIR + 'dictionary.dat'
+THROTTLE_SECONDS = 1.6
