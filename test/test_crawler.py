@@ -18,7 +18,6 @@ def test_crawl_urls():
     url_journals = crawl_urls(url_journals)
     print(url_journals[:2])
     assert len(url_journals) == 100
-    print(url_journals[:2])
     assert url_journals[:2] == ['http://dblp.uni-trier.de/db/journals/ij3dim',
                                 'http://dblp.uni-trier.de/db/journals/4or']
     assert url_journals[-1] == 'http://dblp.uni-trier.de/db/journals/jaif'
