@@ -3,7 +3,7 @@ import os
 import requests
 from tsg.config import RAW_DIR
 
-def test_crawl_journal():
+def test_crawl_journal_url():
     url = 'http://dblp.uni-trier.de/db/journals/crossroads/'
     url_journals = crawl_journal(url)
     assert url_journals[0][:2] == ['http://xrds.acm.org',

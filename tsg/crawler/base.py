@@ -24,7 +24,7 @@ def crawl_site(url, category):
     with open(doc_path, 'w') as f:
         f.write(webpage.text)
 
-def crawl_journal(journal_url):
+def crawl_journal_url(journal_url):
     logging.info('Downloading URL {}'.format(journal_url))
     journal_site = get_site(journal_url)
     tree = html.fromstring(journal_site.content)
@@ -33,6 +33,11 @@ def crawl_journal(journal_url):
     journal_links = [journal_info_links,journal_volume_links]
     return journal_links
 
+def crawl_journal_subsites(journal_url):
+    logging.info('Crawling journal volumes in {}'.format(journal_url))
+    journal_links = crawl_journal_url(journal_url)
+    for journal_volume_site in journal_links[1]:
+        crawl_site(journal_volume_site)
 
 def crawl_urls(url):
 
