@@ -1,8 +1,15 @@
-from tsg.crawler import crawl_site, crawl_urls
+from tsg.crawler import crawl_site, crawl_urls, crawl_journal
 import os
 import requests
 from tsg.config import RAW_DIR
 
+def test_crawl_journal():
+    url = 'http://dblp.uni-trier.de/db/journals/crossroads/'
+    url_journals = crawl_journal(url)
+    assert url_journals[0][:2] == ['http://xrds.acm.org',
+                                'http://dl.acm.org/citation.cfm?id=J1271']
+    assert url_journals[1][:2] == ['http://dblp.uni-trier.de/db/journals/crossroads/crossroads22.html',
+                                    'http://dblp.uni-trier.de/db/journals/crossroads/crossroads21.html']
 
 def test_crawl_urls():
     url = 'http://dblp.uni-trier.de/pers?pos=1'
@@ -12,8 +19,7 @@ def test_crawl_urls():
                         'http://dblp.uni-trier.de/pers/hd/a/A:Ambha']
     assert urls[-1] == 'http://dblp.uni-trier.de/pers/hd/a/Aaltonen:Viljakaisa'
 
-    #  TODO: do the test for journals and conferences as well
-
+    #Journals
     url_journals = 'http://dblp.uni-trier.de/db/journals/?pos=1'
     url_journals = crawl_urls(url_journals)
     print(url_journals[:2])
@@ -46,16 +52,16 @@ def test_crawl_site():
         assert f.read() == webpage.text
 
 
-# def test_crawl_site_html_suffix():
-#     url = 'http://dblp.uni-trier.de/db/journals/tap/tap7.html'
-#     filename = RAW_DIR + 'journal_tap_tap7.html'
+def test_crawl_site_html_suffix():
+    url = 'http://dblp.uni-trier.de/db/journals/tap/tap7.html'
+    filename = RAW_DIR + 'journal_tap_tap7.html'
 
-#     assert not os.path.exists(filename)
+    assert not os.path.exists(filename)
 
-#     crawl_site(url, 'journal')
+    crawl_site(url, 'journal')
 
-#     webpage = requests.get(url)
+    webpage = requests.get(url)
 
-#     assert os.path.exists(filename)
-#     with open(filename) as f:
-#         assert f.read() == webpage.text
+    assert os.path.exists(filename)
+    with open(filename) as f:
+        assert f.read() == webpage.text

@@ -24,6 +24,15 @@ def crawl_site(url, category):
     with open(doc_path, 'w') as f:
         f.write(webpage.text)
 
+def crawl_journal(journal_url):
+    logging.info('Downloading URL {}'.format(journal_url))
+    journal_site = get_site(journal_url)
+    tree = html.fromstring(journal_site.content)
+    journal_info_links = tree.xpath("//div[@id='main']/p/a/@href")
+    journal_volume_links = tree.xpath("//div[@id='main']/ul/li/a/@href")
+    journal_links = [journal_info_links,journal_volume_links]
+    return journal_links
+
 
 def crawl_urls(url):
 
