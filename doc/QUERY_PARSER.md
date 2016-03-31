@@ -2,11 +2,8 @@ TODO
 
 # Query Parser
 
-Take the query, separate by terms, (simplify terms by normalization?), calculate the ranking of query vs docs terms using the following algorithm.
+Take query input and pass it to the ranker.
 
-<img src='http://i.imgur.com/W54qpZ3.png'>
+Check if returned number documents is lower than some number, so try different combinations of the query to fill K docs.
 
-Main idea is we already calculated the tf-idf for each term and document, So for each term we find the postings lists, sort by higher tf-idf of each idf term list and return the first K (something to be defined later), save each term list, them find those docs that contains the most number of terms (at least 3 or 4) ordered by higher resulting tf-idf calculated as the sum of all products the query tf-idf and document tf-idf for each term.
-
-
-After this calculation, we add this score with an static score retrieved for a ranker object, which have an score for each documents based on a criteria (Check Ranker for scoring criteria).
+Example: "rising interest rates". If < K docs, try "rising interest" and "interest rates" first, fill K docs and if don't fill try "rising interest rates" and fill K docs.
