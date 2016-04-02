@@ -3,31 +3,33 @@
 import glob
 import re
 import logging
-import shutil
-import os
 
-from tsg.indexer import index
-from tsg.config import INTERMEDIATE_DIR, DICTIONARY_PATH
+from tsg.indexer import parse_term
+from tsg.config import RAW_DIR, INTERMEDIATE_DIR, DICTIONARY_PATH
 
 logging.basicConfig(level=logging.INFO)
 
 
 def main():
-    print('Careful, this deletes data/parsed/*. Wanna proceed? y/N')
+    # find all csvs and sort them alphabetically
+    files = glob.glob(INTERMEDIATE_DIR+'*.csv')
+    files.sort()
+
+    num_documents = len(glob.glob(RAW_DIR+'*.html'))
+
+    print('Careful, this deletes the index. Wanna proceed? y/N')
     if input() != 'y':
         return
 
-    shutil.rmtree(PARSED_DIR)
-    os.mkdir(PARSED_DIR)
+    # TODO: move this to indexer
+    compiled_termname_re = re.compile('([^/]*).csv')
+    with open(DICTIONARY_PATH, 'w') as dictionary_file:  # deletes dictionary!
+        for term_file in files:
+            term = compiled_termname_re.search(term_file).groups()[0]
+            indexed_line = parse_term(term_file, num_documents)
 
-    files = glob.glob(RAW_DIR + '*.html')
-    for f in files:
-        try:
-            document_type = re.search('([^/_]*)[^/]*.html$', f).groups()[0]
-        except AttributeError:
-            continue
-
-        parse_document(document_type, f)
+            dictionary_file.write('{} {}\n'.format(term, indexed_line))
+            logging.info('Indexed term {}'.format(term))
 
 
 if __name__ == "__main__":
