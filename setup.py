@@ -14,6 +14,6 @@ setup(
     license='',
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
-    scripts=['.bin/tsg_crawl', './bin/tsg_index', './bin/tsg_parse', './bin/tsg_intermediate'],
+    scripts=['./bin/tsg_crawl', './bin/tsg_index', './bin/tsg_parse', './bin/tsg_intermediate'],
     install_requires=['requests', 'nose', 'lxml', 'mock', 'pandas']
 )
