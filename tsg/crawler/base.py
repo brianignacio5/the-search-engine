@@ -37,7 +37,7 @@ def crawl_journal_subsites(journal_url):
     logging.info('Crawling journal volumes in {}'.format(journal_url))
     journal_links = crawl_journal_url(journal_url)
     for journal_volume_site in journal_links[1]:
-        crawl_site(journal_volume_site)
+        crawl_site(journal_volume_site, 'journal')
 
 def crawl_urls(url):
 

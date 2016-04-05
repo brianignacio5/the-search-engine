@@ -1,11 +1,29 @@
-from tsg.crawler import crawl_site, crawl_urls, crawl_journal
+from tsg.crawler import crawl_site, crawl_urls, crawl_journal_url, crawl_journal_subsites
 import os
 import requests
 from tsg.config import RAW_DIR
 
+def test_crawl_journal():
+    urls = ['http://dblp.uni-trier.de/db/journals/ij3dim/ij3dim1.html',
+            'http://dblp.uni-trier.de/db/journals/ij3dim/ij3dim2.html',
+            'http://dblp.uni-trier.de/db/journals/ij3dim/ij3dim3.html',
+            'http://dblp.uni-trier.de/db/journals/ij3dim/ij3dim4.html']
+
+    filenames = [RAW_DIR + 'journal_ij3dim_ij3dim1.html',
+                 RAW_DIR + 'journal_ij3dim_ij3dim2.html',
+                 RAW_DIR + 'journal_ij3dim_ij3dim3.html',
+                 RAW_DIR + 'journal_ij3dim_ij3dim4.html']
+
+    crawl_journal_subsites('http://dblp.uni-trier.de/db/journals/ij3dim/')
+
+    for i,url in enumerate(urls):
+        with open(filenames[i]) as f:
+            webpage = requests.get(url)
+            assert f.read() == webpage.text
+
 def test_crawl_journal_url():
     url = 'http://dblp.uni-trier.de/db/journals/crossroads/'
-    url_journals = crawl_journal(url)
+    url_journals = crawl_journal_url(url)
     assert url_journals[0][:2] == ['http://xrds.acm.org',
                                 'http://dl.acm.org/citation.cfm?id=J1271']
     assert url_journals[1][:2] == ['http://dblp.uni-trier.de/db/journals/crossroads/crossroads22.html',
