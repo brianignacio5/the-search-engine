@@ -1,6 +1,5 @@
 import math
 import os, os.path
-from collections import defaultdict
 import numpy as np
 from tsg.config import DICTIONARY_PATH, RAW_DIR
 
