@@ -65,8 +65,7 @@ def test_cosine_score_calc() :
 		pass
 	assert not os.path.exists(mock_filename)
 	mock_dictionary_create()
-	N = len([name for name in os.listdir(RAW_DIR) if os.path.isfile(os.path.join(RAW_DIR,name))])
-	
+
 	parts = query.split(' ')
 	term1 = parts[0]
 	term1_list = get_dictionary_term_list(term1, mock_filename)
@@ -80,19 +79,41 @@ def test_cosine_score_calc() :
 	term3_list = get_dictionary_term_list(term3, mock_filename)
 	term3_query_weight = calculate_query_term_weight(term3,query,mock_filename)
 
-	Score = defaultdict(float) # Holds tf-idf value for each doc- query term pair
-	Length = defaultdict(float) # Holds numbers of docs for each term
+	Score = { } # Holds tf-idf value for each doc- query term pair
+	Length = { } # Holds numbers of docs for each term
 
 	for key,value in term1_list.items():
-		Score[key] = sum(Score[key],value*term1_query_weight)
-		print(Score[key])
-		Length[key] += math.pow(float(Score[key]),float(2))
+		if key in Score:
+			Score[key] += float(value)*float(term1_query_weight)
+		else:
+			Score[key] = float(value)*float(term1_query_weight)
+
+		if key in Length:
+			Length[key] += math.pow(float(Score[key]),float(2))
+		else:
+			Length[key] = math.pow(float(Score[key]),float(2))
+
 	for key,value in term2_list.items():
-		Score[key] += term2_list[key]*term2_query_weight
-		Length[key] += math.pow(float(Score[key]),float(2))
+		if key in Score:
+			Score[key] += float(value)*float(term2_query_weight)
+		else:
+			Score[key] = float(value)*float(term2_query_weight)
+
+		if key in Length:
+			Length[key] += math.pow(float(Score[key]),float(2))
+		else:
+			Length[key] = math.pow(float(Score[key]),float(2))
+
 	for key,value in term3_list.items():
-		Score[key] += term3_list[key]*term3_query_weight
-		Length[key] += math.pow(float(Score[key]),float(2))
+		if key in Score:
+			Score[key] += float(value)*float(term3_query_weight)
+		else:
+			Score[key] = float(value)*float(term3_query_weight)
+
+		if key in Length:
+			Length[key] += math.pow(float(Score[key]),float(2))
+		else:
+			Length[key] = math.pow(float(Score[key]),float(2))
 
 	for key in Score:
 		Score[key] = Score[key] / Length[key]

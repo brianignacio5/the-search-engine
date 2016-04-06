@@ -25,19 +25,26 @@ def calculate_query_term_weight(term, query, dictionary=DICTIONARY_PATH):
 	return weight
 
 def cosine_score_calc(query,dictionary=DICTIONARY_PATH): 
-	query_terms = query.split('')
+	query_terms = query.split(' ')
 
-	Scores = defaultdict(float)
-	Length = defaultdict(float) # Holds numbers of docs for each term
+	Scores = { }
+	Length = { } # Holds numbers of docs for each term
 
 	for term in query_terms:
 		query_term_weight = calculate_query_term_weight(term,query,dictionary)
 		term_list = get_dictionary_term_list(term,dictionary)
 		for key, value in term_list.items():
-			Scores[key] += value*query_term_weight
-			Length[key] += math.pow(float(Scores[key]),float(2))
+			if key in Scores:
+				Scores[key] += float(value)*float(query_term_weight)
+			else:
+				Scores[key] = float(value)*float(query_term_weight)
 
-	for i, score in enumerate(Scores):
-		Scores[i] = score / Length[i]
+			if key in Length:
+				Length[key] += math.pow(float(Scores[key]),float(2))
+			else:
+				Length[key] = math.pow(float(Scores[key]),float(2))
+
+	for key in Scores:
+		Scores[key] = Scores[key] / Length[key]
 
 	return Scores
