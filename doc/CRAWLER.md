@@ -65,6 +65,7 @@ def save_one_file(url):
 
 ## Invalid Links
 
+These links had encountered a 404 error when crawling. 
 ### Invalid Journals
 1. IEEE Transactions on Circuits and Systems I: Fundamental Theory and Applications
 2. IEEE Transactions on Circuits and Systems I: Regular Papers
