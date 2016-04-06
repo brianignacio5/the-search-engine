@@ -63,4 +63,11 @@ def save_one_file(url):
   with open(filename) as f:
     f.write(webpage.data)
 
+## Invalid Links
+
+### Invalid Journals
+1. IEEE Transactions on Circuits and Systems I: Fundamental Theory and Applications
+2. IEEE Transactions on Circuits and Systems I: Regular Papers
+3. IEEE Transactions on Circuits and Systems II: Analog and Digital Signal Processing
+4. IEEE Transactions on Circuits and Systems II: Express Briefs
 
