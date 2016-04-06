@@ -1,52 +1,103 @@
 import math
-
-from tsg.config import DICTIONARY_PATH
+import numpy as np
+import os
+from collections import defaultdict
+from tsg.config import DATA_DIR, RAW_DIR
 from tsg.ranker import get_dictionary_term_list, cosine_score_calc, calculate_query_term_weight
+
+def mock_dictionary_create() :
+	line1 = 'term c7c1d354-4b85-438b-bb2e-89350e40e33f:3.3322237271982384,15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0:3.3205763030575843,7dd5a186-1dfe-4be6-be0b-ded65e8067c9:3.3205763030575843\n'
+	line2 = 'to c7c1d354-4b85-438b-bb2e-89350e40e33f:3.3205763030575843,15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0:3.3322237271982384,7dd5a186-1dfe-4be6-be0b-ded65e8067c9:3.3205763030575843\n'
+	line3 = 'evaluate c7c1d354-4b85-438b-bb2e-89350e40e33f:3.3205763030575843,15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0:3.3205763030575843,7dd5a186-1dfe-4be6-be0b-ded65e8067c9:3.3322237271982384\n'
+	mock_filename = DATA_DIR + 'mock_dictionary.dat'
+
+	with open(mock_filename,'w') as f:
+		f.write(line1)
+		f.write(line2)
+		f.write(line3)
 
 def test_extract_termfile() :
 
-	term = 'Term to evaluate'
-	term_list = get_dictionary_term_list(term)
+	term = 'term'
+	mock_filename = DATA_DIR + 'mock_dictionary.dat'
+	try:
+		os.remove(mock_filename)
+	except OSError:
+		pass
+	assert not os.path.exists(mock_filename)
+	mock_dictionary_create()
 
-	#Get Dict term list
-	term_list = {}
-	with open(DICTIONARY_PATH) as dict_f:
-		for line in dict_f:
-			if term in line:
-				parts = line[len(term)+1:].split(term).split(',')
-				for doc_data in parts:
-					doc_data_parts = parts.split(':')
-					term_list[doc_data_parts[0]] = doc_data_parts[1]
+	term_list = { }
+	term_list = get_dictionary_term_list(term,mock_filename)
 
 	assert len(term_list) > 0
+	print(term_list)
+	assert term_list == {"7dd5a186-1dfe-4be6-be0b-ded65e8067c9": "3.3205763030575843",
+						 "c7c1d354-4b85-438b-bb2e-89350e40e33f": "3.3322237271982384",
+						 "15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0": "3.3205763030575843"}
 
-	assert term_list[1] == {"doc1":"tf-idf","doc2": "tf-idf"}
+def test_term_query_weight() :
+	query = 'term to evaluate'
+	mock_filename = DATA_DIR + 'mock_dictionary.dat'
+	try:
+		os.remove(mock_filename)
+	except OSError:
+		pass
+	assert not os.path.exists(mock_filename)
+	mock_dictionary_create()
+
+	term_freq = query.count('term')
+	doc_freq = 3 #Check mock dictionary
+	term_weight = calculate_query_term_weight('term',query,mock_filename)
+
+	#N is number of docs in collection
+	N = len([name for name in os.listdir(RAW_DIR) if os.path.isfile(os.path.join(RAW_DIR,name))])
+	weight = (1+ np.log10(term_freq))*math.log10(N/doc_freq)
+	assert term_weight == weight
 
 def test_cosine_score_calc() :
 
-	query = 'Query to search'
+	query = 'term to evaluate'
+	mock_filename = DATA_DIR + 'mock_dictionary.dat'
+	try:
+		os.remove(mock_filename)
+	except OSError:
+		pass
+	assert not os.path.exists(mock_filename)
+	mock_dictionary_create()
+	N = len([name for name in os.listdir(RAW_DIR) if os.path.isfile(os.path.join(RAW_DIR,name))])
+	
 	parts = query.split(' ')
 	term1 = parts[0]
-	term1_list = get_dictionary_term_list(term1)
+	term1_list = get_dictionary_term_list(term1, mock_filename)
+	term1_query_weight = calculate_query_term_weight(term1,query,mock_filename)
 
 	term2 = parts[1]
-	term2_list = get_dictionary_term_list(term2)
-	Score = [] # Holds tf-idf value for each doc- query term pair
-	Length = [] # Holds numbers of docs for each term
+	term2_list = get_dictionary_term_list(term2, mock_filename)
+	term2_query_weight = calculate_query_term_weight(term2,query,mock_filename)
 
-	for term in parts:
-		query_term_weight = calculate_query_term_weight(term,query)
-		term_list = [term1_list,term2_list]
-		for key in term_list:
-			Score[key] += term_list[key]*query_term_weight
-			Length[key] += math.pow(Score[key],2)
+	term3 = parts[2]
+	term3_list = get_dictionary_term_list(term3, mock_filename)
+	term3_query_weight = calculate_query_term_weight(term3,query,mock_filename)
 
-	for i, score in enumerate(Score):
-		Score[i] = score / Length[i]
-	
-	Docs_assert = cosine_score_calc(Score)
+	Score = defaultdict(float) # Holds tf-idf value for each doc- query term pair
+	Length = defaultdict(float) # Holds numbers of docs for each term
 
-	Docs_results = cosine_score_calc(query)
+	for key,value in term1_list.items():
+		Score[key] = sum(Score[key],value*term1_query_weight)
+		print(Score[key])
+		Length[key] += math.pow(float(Score[key]),float(2))
+	for key,value in term2_list.items():
+		Score[key] += term2_list[key]*term2_query_weight
+		Length[key] += math.pow(float(Score[key]),float(2))
+	for key,value in term3_list.items():
+		Score[key] += term3_list[key]*term3_query_weight
+		Length[key] += math.pow(float(Score[key]),float(2))
 
-	assert Docs_results[:2] == Docs_assert[:2]
+	for key in Score:
+		Score[key] = Score[key] / Length[key]
+
+	Score_by_function = cosine_score_calc(query, mock_filename)
+
+	assert Score_by_function == Score
 
