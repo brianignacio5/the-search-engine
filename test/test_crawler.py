@@ -14,6 +14,13 @@ def test_crawl_journal():
                  RAW_DIR + 'journal_ij3dim_ij3dim3.html',
                  RAW_DIR + 'journal_ij3dim_ij3dim4.html']
 
+    for f in filenames:
+        try:
+            os.remove(f)
+        except OSError:
+            pass
+        assert not os.path.exists(f)
+
     crawl_journal_subsites('http://dblp.uni-trier.de/db/journals/ij3dim/')
 
     for i,url in enumerate(urls):
@@ -35,7 +42,8 @@ def test_crawl_urls():
     assert len(urls) == 300
     assert urls[:2] == ['http://dblp.uni-trier.de/pers/hd/a/A:Almaaf_Bader_Ali',
                         'http://dblp.uni-trier.de/pers/hd/a/A:Ambha']
-    assert urls[-1] == 'http://dblp.uni-trier.de/pers/hd/a/Aaltonen:Viljakaisa'
+    print(urls[-1])
+    assert urls[-2] == 'http://dblp.uni-trier.de/pers/hd/a/Aaltonen:Viljakaisa'
 
     #Journals
     url_journals = 'http://dblp.uni-trier.de/db/journals/?pos=1'
@@ -58,7 +66,10 @@ def test_crawl_urls():
 def test_crawl_site():
     url = 'http://dblp.uni-trier.de/pers/hd/w/Walker:David'
     filename = RAW_DIR + 'author_w_Walker:David.html'
-
+    try:
+        os.remove(filename)
+    except OSError:
+        pass
     assert not os.path.exists(filename)
 
     crawl_site(url, 'author')
@@ -73,7 +84,10 @@ def test_crawl_site():
 def test_crawl_site_html_suffix():
     url = 'http://dblp.uni-trier.de/db/journals/tap/tap7.html'
     filename = RAW_DIR + 'journal_tap_tap7.html'
-
+    try:
+        os.remove(filename)
+    except OSError:
+        pass
     assert not os.path.exists(filename)
 
     crawl_site(url, 'journal')
