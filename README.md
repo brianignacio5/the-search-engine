@@ -6,6 +6,7 @@ Website crawler and attached search engine for the results.
 Handle this:
 http://dblp.uni-trier.de/db/journals/phat/
 and all other journals
+check for 404s in raw files manually
 
 ## Testing
 
