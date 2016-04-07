@@ -63,4 +63,16 @@ def save_one_file(url):
   with open(filename) as f:
     f.write(webpage.data)
 
+## Invalid Links
+
+These links had encountered a 404 error when crawling. 
+### Invalid Journals
+1. IEEE Transactions on Circuits and Systems I: Fundamental Theory and Applications
+2. IEEE Transactions on Circuits and Systems I: Regular Papers
+3. IEEE Transactions on Circuits and Systems II: Analog and Digital Signal Processing
+4. IEEE Transactions on Circuits and Systems II: Express Briefs
+5. IEICE Transactions on Communications
+6. IEICE Transactions on Fundamentals of Electronics, Communications and Computer Sciences
+7. IEICE Transactions on Information & Systems
+8. Information & Systems; IEICE Transactions on ...
 
