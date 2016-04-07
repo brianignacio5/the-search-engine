@@ -23,7 +23,7 @@ def test_crawl_journal():
 
     crawl_journal_subsites('http://dblp.uni-trier.de/db/journals/ij3dim/')
 
-    for i,url in enumerate(urls):
+    for i, url in enumerate(urls):
         with open(filenames[i]) as f:
             webpage = requests.get(url)
             assert f.read() == webpage.text

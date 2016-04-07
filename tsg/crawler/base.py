@@ -43,7 +43,7 @@ def crawl_journal_url(journal_url):
     journal_info_links = tree.xpath("//div[@id='main']/p/a/@href")
     journal_volume_links = tree.xpath("//div[@id='main']/ul/li/a/@href")
 
-    for i,volume in enumerate(journal_volume_links):
+    for i, volume in enumerate(journal_volume_links):
         if not validators.url(volume):
             logging.info('Fixing url {}'.format(journal_url))
             journal_volume_links[i] = journal_url + '/' + volume
