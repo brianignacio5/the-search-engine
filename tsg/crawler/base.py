@@ -1,4 +1,5 @@
 from lxml import html
+import requests
 import re
 import os
 import logging
@@ -21,11 +22,13 @@ def crawl_site(url, category):
         logging.warn('File {} exists already. Skipping'.format(doc_path))
         return
 
-    webpage = get_site(url)
-    if webpage.status_code != 404:
+    try:
+        webpage = get_site(url)
         with open(doc_path, 'w') as f:
             f.write(webpage.text)
             logging.info('File at {}'.format(doc_path))
+    except requests.exceptions.HTTPError:
+        pass
 
 def crawl_site_journal_wrap(url,category):
     if category == 'journal':

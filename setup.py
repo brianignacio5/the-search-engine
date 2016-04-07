@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from setuptools import find_packages, setup
 
 EXCLUDE_FROM_PACKAGES = []

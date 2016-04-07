@@ -65,11 +65,6 @@ def test_crawl_urls():
 def test_crawl_site():
     url = 'http://dblp.uni-trier.de/pers/hd/w/Walker:David'
     filename = RAW_DIR + 'author_w_Walker:David.html'
-    try:
-        os.remove(filename)
-    except OSError:
-        pass
-    assert not os.path.exists(filename)
 
     crawl_site(url, 'author')
 
@@ -83,11 +78,6 @@ def test_crawl_site():
 def test_crawl_site_html_suffix():
     url = 'http://dblp.uni-trier.de/db/journals/tap/tap7.html'
     filename = RAW_DIR + 'journal_tap_tap7.html'
-    try:
-        os.remove(filename)
-    except OSError:
-        pass
-    assert not os.path.exists(filename)
 
     crawl_site(url, 'journal')
 

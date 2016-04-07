@@ -27,7 +27,7 @@ def get_site(url):
                          format(url, result.status_code))
 
             if result.status_code == 404:
-                return result
+                raise result.raise_for_status()
 
             if result.status_code == 429:
                 retry_after = int(result.headers['retry-after'])
