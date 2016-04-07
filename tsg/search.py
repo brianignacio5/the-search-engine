@@ -14,9 +14,8 @@ def search(searchphrase, index_directory):
 
     parsed_query = parse_text(searchphrase)
 
-    # TODO Modify get_dictionary_term_list in tsg.ranker.base to 
-    # use the hash dictionary and read a position in dictionary 
+    # TODO Modify get_dictionary_term_list in tsg.ranker.base to
+    # use the hash dictionary and read a position in dictionary
     # instead of line by line
 
     return rank(parsed_query, index_directory)
-
