@@ -1,7 +1,6 @@
 import math
 import numpy as np
 import os
-from collections import defaultdict
 from tsg.config import DATA_DIR, RAW_DIR
 from tsg.ranker import get_dictionary_term_list, cosine_score_calc, calculate_query_term_weight
 

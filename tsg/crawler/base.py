@@ -22,9 +22,10 @@ def crawl_site(url, category):
         return
 
     webpage = get_site(url)
-    with open(doc_path, 'w') as f:
-        f.write(webpage.text)
-    logging.info('File at {}'.format(doc_path))
+    if webpage.status_code != 404:
+        with open(doc_path, 'w') as f:
+            f.write(webpage.text)
+            logging.info('File at {}'.format(doc_path))
 
 def crawl_site_journal_wrap(url,category):
     if category == 'journal':
