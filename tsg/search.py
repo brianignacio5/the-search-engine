@@ -1,5 +1,3 @@
-from tsg.parser import parse_text
-from tsg.ranker import rank
 
 def search(searchphrase, index_directory):
     """
