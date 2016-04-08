@@ -26,6 +26,9 @@ def get_site(url):
             logging.warn('There was a problem getting URL {}: Status code: {}'.
                          format(url, result.status_code))
 
+            if result.status_code == 404:
+                raise result.raise_for_status()
+
             if result.status_code == 429:
                 retry_after = int(result.headers['retry-after'])
                 logging.info('Waiting for {} seconds'.format(

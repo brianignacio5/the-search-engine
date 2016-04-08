@@ -1,15 +1,22 @@
-#Ranker
+# Ranker
 
-Take the query, separate by terms, (simplify terms by normalization?), calculate the ranking of query vs docs terms using 
-the following algorithm.
+## Input Output
+Input = Clean query string
+Output = Dictionary with doc IDs as keys and scores as values
 
-<img src='http://i.imgur.com/W54qpZ3.png'>
+## Workflow
 
-Main idea is we already calculated the tf-idf for each term and document, 
-So for each term we find the postings lists, sort by higher tf-idf of each idf term list and return the first K 
-(something to be defined later), save each term list, them find those docs that contains the most number of terms 
-(at least 3 or 4) ordered by higher resulting tf-idf calculated as the sum of all products the query tf-idf and document 
-tf-idf for each term.
+### Cosine Score Calculation
+
+1. Split the query by terms and for each term:
+  a. Calculate term's query weight
+  b. Calculate term-s document weight
+  c. Add the product of 2 and 3 to score[doc_id]
+  d. Add the square of product of 2 and 3 to length[doc_id]
+2. Normalize each score using score[doc_id] = score[doc_id] / length[doc_id]
+
+
+### Page Rank
 
 Add Page Rank (Check page rank algorithms based on links) and PENDING another scoring criteria.
 
