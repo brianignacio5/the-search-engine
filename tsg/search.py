@@ -7,7 +7,6 @@ def search(searchphrase, index_directory):
 
     searchphrase: An unformatted search query
     index_directory: The directory where dictionary.dat and indexinfo.json lie.
-
     IMPORTANT: Use the dictionary.dat path as index_directory parameter
     until the dictionary hash logic is defined.
     """
