@@ -1,1 +1,1 @@
-from tsg.indexer.base import parse_term, hash_index
+from tsg.indexer.base import create_index, hash_index
