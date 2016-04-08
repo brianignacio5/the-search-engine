@@ -42,8 +42,6 @@ def clean_testfiles():
 @with_setup(clean_testfiles, clean_testfiles)
 @mock.patch('tsg.indexer.base.create_indexinfo')
 def test_create_index(create_indexinfo_mock):
-    import ipdb
-    ipdb.set_trace()
     num_documents = 3
     # TODO add some files to test/files/intermediate and check the dictionary
     # later
