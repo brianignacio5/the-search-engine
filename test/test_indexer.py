@@ -32,22 +32,28 @@ TEST_INDEXINFO_PATH = DATA_DIR + 'testinfo.dat'
 
 
 def clean_testfiles():
-    os.remove(TEST_DICT_PATH)
-    os.remove(TEST_INDEXINFO_PATH)
+    for f in [TEST_DICT_PATH, TEST_INDEXINFO_PATH]:
+        try:
+            os.remove(TEST_DICT_PATH)
+        except FileNotFoundError:
+            pass
 
 
-@mock.patch('tsg.indexer.create_indexinfo')
 @with_setup(clean_testfiles, clean_testfiles)
+@mock.patch('tsg.indexer.base.create_indexinfo')
 def test_create_index(create_indexinfo_mock):
+    import ipdb
+    ipdb.set_trace()
+    num_documents = 3
+    # TODO add some files to test/files/intermediate and check the dictionary
+    # later
     create_index('test/files/intermediate/',
-                 3,
+                 num_documents,
                  TEST_DICT_PATH,
                  TEST_INDEXINFO_PATH)
 
     assert os.path.isfile(TEST_INDEXINFO_PATH)
-    import ipdb
-    ipdb.set_trace()
-    #  create_indexinfo_mock.called.with_arguments(num_documents) # TODO check
+    create_indexinfo_mock.assert_called_with(num_documents, TEST_INDEXINFO_PATH)
 
 
 @with_setup(clean_testfiles, clean_testfiles)
