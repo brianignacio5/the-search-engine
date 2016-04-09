@@ -1,5 +1,5 @@
 from nose.tools import eq_
-import os
+import glob
 import math
 from tsg.config import DATA_DIR, RAW_DIR
 from tsg.ranker import get_dictionary_term_list, cosine_score_calc, calculate_query_term_weight
@@ -18,7 +18,7 @@ def test_extract_termfile() :
 
 def test_term_query_weight() :
 
-    N = len([name for name in os.listdir(RAW_DIR) if os.path.isfile(os.path.join(RAW_DIR,name))])
+    N = len(glob.glob(RAW_DIR+'*.html'))
     weight = math.log10(N/3)
 
     query = 'term to evaluate'

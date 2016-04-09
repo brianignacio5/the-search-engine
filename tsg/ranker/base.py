@@ -1,5 +1,5 @@
 import math
-import os, os.path
+import glob
 import numpy as np
 from tsg.config import DICTIONARY_PATH, RAW_DIR
 
@@ -16,7 +16,7 @@ def get_dictionary_term_list(term,dictionary=DICTIONARY_PATH) :
 
 def calculate_query_term_weight(term, query, dictionary=DICTIONARY_PATH):
 	term_dictionary = get_dictionary_term_list(term, dictionary)
-	N = len([name for name in os.listdir(RAW_DIR) if os.path.isfile(os.path.join(RAW_DIR,name))])
+	N = len(glob.glob(RAW_DIR+'*.html'))
 	doc_freq = len(term_dictionary)
 	term_freq = query.lower().count(term)
 	weight = (1+ np.log10(term_freq))*math.log10(N/doc_freq)
