@@ -1,8 +1,8 @@
 from nose.tools import eq_
-import os
+import glob
 import math
 from tsg.config import DATA_DIR, RAW_DIR
-from tsg.ranker import get_dictionary_term_list, cosine_score_calc, calculate_query_term_weight
+from tsg.ranker import get_dictionary_term_list, cosine_score_calc, calculate_query_term_weight, rank
 
 TEST_DICT_FILENAME = DATA_DIR + '/test/files/test_dict.dat'
 
@@ -18,7 +18,7 @@ def test_extract_termfile() :
 
 def test_term_query_weight() :
 
-    N = len([name for name in os.listdir(RAW_DIR) if os.path.isfile(os.path.join(RAW_DIR,name))])
+    N = len(glob.glob(RAW_DIR+'*.html'))
     weight = math.log10(N/3)
 
     query = 'term to evaluate'
@@ -35,5 +35,16 @@ def test_cosine_score_calc() :
                     'c7c1d354-4b85-438b-bb2e-89350e40e33f': 1.7320484452685714}
 
     scores_by_function = cosine_score_calc(query, TEST_DICT_FILENAME)
+
+    assert scores_by_function == scores
+
+def test_rank():
+    query = 'term to evaluate'
+
+    scores = [('15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0', 1.7320484452685714),
+                ('7dd5a186-1dfe-4be6-be0b-ded65e8067c9', 1.7320484452685714),
+                ('c7c1d354-4b85-438b-bb2e-89350e40e33f', 1.73204844526857140)]
+
+    scores_by_function = rank(query, TEST_DICT_FILENAME)
 
     assert scores_by_function == scores
