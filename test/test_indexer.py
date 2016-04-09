@@ -28,7 +28,7 @@ def test_parse_term():
 
 
 TEST_DICT_PATH = DATA_DIR + 'testdict.dat'
-TEST_INDEXINFO_PATH = DATA_DIR + 'testinfo.dat'
+TEST_INDEXINFO_PATH = DATA_DIR + 'testinfo.json'
 
 
 def clean_testfiles():

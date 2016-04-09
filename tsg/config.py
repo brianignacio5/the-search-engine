@@ -24,4 +24,5 @@ FIELDS = ['type', 'title', 'isbn', 'content']
 CSV_HEADER = ','.join(['uuid'] + FIELDS)
 
 DICTIONARY_PATH = DATA_DIR + 'dictionary.dat'
+INDEXINFO_PATH = DATA_DIR + 'indexinfo.json'
 THROTTLE_SECONDS = 1.6
