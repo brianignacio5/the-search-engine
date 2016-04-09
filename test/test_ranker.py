@@ -1,8 +1,7 @@
 from nose.tools import eq_
-import glob
 import math
-from tsg.config import DATA_DIR, RAW_DIR
-from tsg.ranker import get_dictionary_term_list, cosine_score_calc, calculate_query_term_weight
+from tsg.config import DATA_DIR
+from tsg.ranker import get_dictionary_term_list, cosine_score_calc, calculate_query_term_weight, get_number_of_docs
 
 TEST_DICT_FILENAME = DATA_DIR + '/test/files/test_dict.dat'
 
@@ -16,9 +15,13 @@ def test_extract_termfile() :
                          "c7c1d354-4b85-438b-bb2e-89350e40e33f": "3.3322237271982384",
                          "15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0": "3.3205763030575843"}
 
+def test_get_number_docs():
+    N = get_number_of_docs(TEST_DICT_FILENAME)
+    assert N == 25813
+
 def test_term_query_weight() :
 
-    N = len(glob.glob(RAW_DIR+'*.html'))
+    N = get_number_of_docs(TEST_DICT_FILENAME)
     weight = math.log10(N/3)
 
     query = 'term to evaluate'

@@ -1,7 +1,6 @@
 import math
-import glob
 import numpy as np
-from tsg.config import DICTIONARY_PATH, RAW_DIR
+from tsg.config import DICTIONARY_PATH
 
 def get_dictionary_term_list(term,dictionary=DICTIONARY_PATH) :
 	term_list = { }
@@ -14,9 +13,15 @@ def get_dictionary_term_list(term,dictionary=DICTIONARY_PATH) :
 					term_list[doc_data_parts[0]] = doc_data_parts[1].replace("\n","")
 	return term_list
 
+def get_number_of_docs(dictionary):
+	with open(dictionary) as f:
+		for line in f:
+			if 'num_documents' in line:
+				return int(line[len('num_documents')+1:])
+
 def calculate_query_term_weight(term, query, dictionary=DICTIONARY_PATH):
 	term_dictionary = get_dictionary_term_list(term, dictionary)
-	N = len(glob.glob(RAW_DIR+'*.html'))
+	N = get_number_of_docs(dictionary)
 	doc_freq = len(term_dictionary)
 	term_freq = query.lower().count(term)
 	weight = (1+ np.log10(term_freq))*math.log10(N/doc_freq)
