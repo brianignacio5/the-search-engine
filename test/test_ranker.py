@@ -1,13 +1,10 @@
 from nose.tools import eq_
-from nose import with_setup
+import glob
 import math
-import os
-import json
-from tsg.config import DATA_DIR
-from tsg.ranker import get_dictionary_term_list, cosine_score_calc, calculate_query_term_weight, get_number_of_docs
+from tsg.config import DATA_DIR, RAW_DIR
+from tsg.ranker import get_dictionary_term_list, cosine_score_calc, calculate_query_term_weight, rank
 
-TEST_DICT_PATH = DATA_DIR + 'testdict.dat'
-TEST_INDEXINFO_PATH = DATA_DIR + 'testinfo.json'
+TEST_DICT_FILENAME = DATA_DIR + '/test/files/test_dict.dat'
 
 def create_dictionary_index():
     line1 = 'term c7c1d354-4b85-438b-bb2e-89350e40e33f:3.3322237271982384,15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0:3.3205763030575843,7dd5a186-1dfe-4be6-be0b-ded65e8067c9:3.3205763030575843\n'
@@ -43,30 +40,25 @@ def remove_test_dict_info():
 def test_extract_termfile():
 
     term = 'term'
-    term_list = get_dictionary_term_list(term,TEST_DICT_PATH)
+    term_list = get_dictionary_term_list(term,TEST_DICT_FILENAME)
 
     assert len(term_list) > 0
     assert term_list == {"7dd5a186-1dfe-4be6-be0b-ded65e8067c9": "3.3205763030575843",
                          "c7c1d354-4b85-438b-bb2e-89350e40e33f": "3.3322237271982384",
                          "15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0": "3.3205763030575843"}
 
-@with_setup(create_dictionary_index,remove_test_dict_info)
-def test_get_number_docs():
-    N = get_number_of_docs(TEST_INDEXINFO_PATH)
-    assert N == 25813
+def test_term_query_weight() :
 
-@with_setup(create_dictionary_index,remove_test_dict_info)
-def test_term_query_weight():
-    N = get_number_of_docs(TEST_INDEXINFO_PATH)
+    N = len(glob.glob(RAW_DIR+'*.html'))
     weight = math.log10(N/3)
 
     query = 'term to evaluate'
-    term_weight = calculate_query_term_weight('term',query,TEST_DICT_PATH, TEST_INDEXINFO_PATH)
+    term_weight = calculate_query_term_weight('term',query,TEST_DICT_FILENAME)
 
     eq_(round(term_weight,4), round(weight,4))
 
-@with_setup(create_dictionary_index,remove_test_dict_info)
-def test_cosine_score_calc():
+def test_cosine_score_calc() :
+
     query = 'term to evaluate'
 
     scores = {'7dd5a186-1dfe-4be6-be0b-ded65e8067c9': 1.7320484452685714,
