@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/moritzschaefer/the-search-engine.svg?branch=master)](https://travis-ci.org/moritzschaefer/the-search-engine)
+
 # the-search-engine
 Website crawler and attached search engine for the results.
 
