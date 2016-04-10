@@ -40,10 +40,8 @@ def test_crawl_urls():
     url = 'http://dblp.uni-trier.de/pers?pos=1'
     urls = crawl_urls(url)
     assert len(urls) == 300
-    assert urls[:2] == ['http://dblp.uni-trier.de/pers/hd/a/A:Almaaf_Bader_Ali',
-                        'http://dblp.uni-trier.de/pers/hd/a/A:Ambha']
-    print(urls[-1])
-    assert urls[-2] == 'http://dblp.uni-trier.de/pers/hd/a/Aaltonen:Viljakaisa'
+    assert 'http://dblp.uni-trier.de/pers/hd/a/A:Almaaf_Bader_Ali' in urls
+    assert 'http://dblp.uni-trier.de/pers/hd/a/A:Ambha' in urls
 
     #Journals
     url_journals = 'http://dblp.uni-trier.de/db/journals/?pos=1'

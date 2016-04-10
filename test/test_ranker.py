@@ -28,6 +28,10 @@ def create_dictionary_index():
 def remove_test_dict_info():
     try:
         os.remove(TEST_DICT_PATH)
+    except OSError:
+        pass
+
+    try:
         os.remove(TEST_INDEXINFO_PATH)
     except OSError:
         pass
@@ -70,5 +74,5 @@ def test_cosine_score_calc():
                     'c7c1d354-4b85-438b-bb2e-89350e40e33f': 1.7320484452685714}
 
     scores_by_function = cosine_score_calc(query, TEST_DICT_PATH, TEST_INDEXINFO_PATH)
-    
+
     assert scores_by_function == scores
