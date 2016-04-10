@@ -57,19 +57,18 @@ def test_term_query_weight():
     weight = math.log10(N/3)
 
     query = 'term to evaluate'
-    term_weight = calculate_query_term_weight('term',query,TEST_DICT_PATH)
+    term_weight = calculate_query_term_weight('term',query,TEST_DICT_PATH, TEST_INDEXINFO_PATH)
 
     eq_(round(term_weight,4), round(weight,4))
 
 @with_setup(create_dictionary_index,remove_test_dict_info)
 def test_cosine_score_calc():
-
     query = 'term to evaluate'
 
     scores = {'7dd5a186-1dfe-4be6-be0b-ded65e8067c9': 1.7320484452685714,
                     '15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0': 1.7320484452685714,
                     'c7c1d354-4b85-438b-bb2e-89350e40e33f': 1.7320484452685714}
 
-    scores_by_function = cosine_score_calc(query, TEST_DICT_PATH)
-
+    scores_by_function = cosine_score_calc(query, TEST_DICT_PATH, TEST_INDEXINFO_PATH)
+    
     assert scores_by_function == scores
