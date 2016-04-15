@@ -47,9 +47,9 @@ def calculate_query_term_weight(term, query_terms, index_dictionary_path=DICTION
 def cosine_score_calc(query_terms, index_dictionary_path=DICTIONARY_PATH,
     index_info_path = INDEXINFO_PATH):
 
-    scores = { }
-    length = { } # Holds score^2 for Length normalization at end
-
+    scores = {}
+    query_length = {} # Holds score^2 for Length normalization at end
+    doc_length = {}
     for term in query_terms:
         query_term_weight = calculate_query_term_weight(term,query_terms,
             index_dictionary_path, index_info_path)
@@ -60,13 +60,15 @@ def cosine_score_calc(query_terms, index_dictionary_path=DICTIONARY_PATH,
             else:
                 scores[key] = float(value)*float(query_term_weight)
 
-            if key in length:
-                length[key] += math.pow(float(value)*float(query_term_weight),float(2))
+            if key in query_length:
+                query_length[key] += math.pow(float(query_term_weight),float(2))
+                doc_length[key] += math.pow(float(value),float(2))
             else:
-                length[key] = math.pow(float(value)*float(query_term_weight),float(2))
+                query_length[key] = math.pow(float(query_term_weight),float(2))
+                doc_length[key] = math.pow(float(value),float(2))
 
     for key in scores:
-        scores[key] = scores[key] / math.sqrt(length[key])
+        scores[key] = scores[key] / (math.sqrt(query_length[key])*math.sqrt(doc_length[key]))
 
     return scores
 

@@ -72,11 +72,13 @@ def test_cosine_score_calc():
     #query = 'term to evaluate'
     query_terms = ['term', 'to', 'evaluate']
 
-    scores = {'7dd5a186-1dfe-4be6-be0b-ded65e8067c9': 1.7320484452685714,
-                    '15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0': 1.7320484452685714,
-                    'c7c1d354-4b85-438b-bb2e-89350e40e33f': 1.7320484452685714}
+    scores = {'7dd5a186-1dfe-4be6-be0b-ded65e8067c9': 0.9999986361252825,
+                    '15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0': 0.9999986361252825,
+                    'c7c1d354-4b85-438b-bb2e-89350e40e33f': 0.9999986361252825}
 
     scores_by_function = cosine_score_calc(query_terms, TEST_DICT_PATH, TEST_INDEXINFO_PATH)
+
+    print(scores_by_function)
 
     assert scores_by_function == scores
 
@@ -85,9 +87,9 @@ def test_rank():
     #query = 'term to evaluate'
     query_terms = ['term', 'to', 'evaluate']
 
-    scores = [('15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0', 1.7320484452685714),
-                ('7dd5a186-1dfe-4be6-be0b-ded65e8067c9', 1.7320484452685714),
-                ('c7c1d354-4b85-438b-bb2e-89350e40e33f', 1.73204844526857140)]
+    scores = [('15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0', 0.9999986361252825),
+                ('7dd5a186-1dfe-4be6-be0b-ded65e8067c9', 0.9999986361252825),
+                ('c7c1d354-4b85-438b-bb2e-89350e40e33f', 0.9999986361252825)]
 
     scores_by_function = rank(query_terms, TEST_DICT_PATH, TEST_INDEXINFO_PATH)
 
