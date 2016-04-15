@@ -11,6 +11,6 @@ if len(sys.argv) == 1:
     print('Usage: {} <query string>'.format(sys.argv[0]))
     sys.exit(1)
 else:
-    query = sys.argv[1:]
+    query = " ".join(sys.argv[1:])
     results = search(query, DICTIONARY_PATH, INDEXINFO_PATH)
     pprint(results)
