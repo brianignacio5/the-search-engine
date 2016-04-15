@@ -68,7 +68,10 @@ def cosine_score_calc(query_terms, index_dictionary_path=DICTIONARY_PATH,
                 doc_length[key] = math.pow(float(value),float(2))
 
     for key in scores:
-        scores[key] = scores[key] / (math.sqrt(query_length[key])*math.sqrt(doc_length[key]))
+        try:
+            scores[key] = scores[key] / (math.sqrt(query_length[key])*math.sqrt(doc_length[key]))
+        except ZeroDivisionError:
+            scores[key] = 0
 
     return scores
 
