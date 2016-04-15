@@ -31,24 +31,27 @@ def get_number_of_docs(index_dictionary_path):
     return dict_f["num_documents"]
 
 
-def calculate_query_term_weight(term, query_terms, index_dictionary_path=DICTIONARY_PATH, 
+def calculate_query_term_weight(term, query_terms, index_dictionary_path=DICTIONARY_PATH,
     index_info_path = INDEXINFO_PATH):
     term_dictionary = get_dictionary_term_list(term, index_dictionary_path)
     N = get_number_of_docs(index_info_path)
     doc_freq = len(term_dictionary)
     term_freq = query_terms.count(term)
-    weight = (1+ np.log10(term_freq))*math.log10(N/doc_freq)
+    try:
+        weight = (1+ np.log10(term_freq))*math.log10(N/doc_freq)
+    except ZeroDivisionError:
+        weight = 0
 
     return weight
 
-def cosine_score_calc(query_terms, index_dictionary_path=DICTIONARY_PATH, 
+def cosine_score_calc(query_terms, index_dictionary_path=DICTIONARY_PATH,
     index_info_path = INDEXINFO_PATH):
 
     scores = { }
     length = { } # Holds score^2 for Length normalization at end
 
     for term in query_terms:
-        query_term_weight = calculate_query_term_weight(term,query_terms, 
+        query_term_weight = calculate_query_term_weight(term,query_terms,
             index_dictionary_path, index_info_path)
         term_list = get_dictionary_term_list(term, index_dictionary_path)
         for key, value in term_list.items():
@@ -67,7 +70,7 @@ def cosine_score_calc(query_terms, index_dictionary_path=DICTIONARY_PATH,
 
     return scores
 
-def rank(query_terms, index_dictionary_path=DICTIONARY_PATH, 
+def rank(query_terms, index_dictionary_path=DICTIONARY_PATH,
     index_info_path = INDEXINFO_PATH):
     '''
     Ranker takes a query and a dictionary path to calculates the score

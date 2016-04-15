@@ -12,11 +12,10 @@ def search(searchphrase, dictionary_path, indexinfo_path):
     until the dictionary hash logic is defined.
     """
 
-    parsed_query = parse_text(searchphrase)
+    parsed_query = parse_text(searchphrase).split(' ')
 
-    # TODO Modify get_dictionary_term_list in tsg.ranker.base to 
-    # use the hash dictionary and read a position in dictionary 
+    # TODO Modify get_dictionary_term_list in tsg.ranker.base to
+    # use the hash dictionary and read a position in dictionary
     # instead of line by line
 
     return rank(parsed_query, dictionary_path, indexinfo_path)
-
