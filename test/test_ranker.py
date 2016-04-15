@@ -47,9 +47,9 @@ def test_extract_termfile():
     term_list = get_dictionary_term_list(term,TEST_DICT_PATH)
 
     assert len(term_list) > 0
-    assert term_list == {"7dd5a186-1dfe-4be6-be0b-ded65e8067c9": "3.3205763030575843",
-                         "c7c1d354-4b85-438b-bb2e-89350e40e33f": "3.3322237271982384",
-                         "15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0": "3.3205763030575843"}
+    assert term_list == {"7dd5a186-1dfe-4be6-be0b-ded65e8067c9": 3.3205763030575843,
+                         "c7c1d354-4b85-438b-bb2e-89350e40e33f": 3.3322237271982384,
+                         "15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0": 3.3205763030575843}
 
 @with_setup(create_dictionary_index,remove_test_dict_info)
 def test_get_number_docs():

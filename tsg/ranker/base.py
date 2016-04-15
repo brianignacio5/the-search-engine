@@ -14,11 +14,13 @@ def get_dictionary_term_list(term,index_dictionary_path=DICTIONARY_PATH) :
     term_list = { }
     with open(index_dictionary_path) as dict_f:
         for line in dict_f:
-            if term in line:
-                parts = line[len(term)+1:].split(',')
+            line_term, documents = line.split(' ')
+
+            if term == line_term:
+                parts = documents.split(',')
                 for doc_data in parts:
                     doc_data_parts = doc_data.split(':')
-                    term_list[doc_data_parts[0]] = doc_data_parts[1].replace("\n","")
+                    term_list[doc_data_parts[0]] = float(doc_data_parts[1].replace("\n",""))
     return term_list
 
 def get_number_of_docs(index_dictionary_path):
