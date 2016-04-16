@@ -57,8 +57,8 @@ def test_crawl_urls():
     assert len(url_conferences) == 100
 
     assert url_conferences[:2] == ['http://dblp.uni-trier.de/db/conf/3dpvt',
-                                    'http://dblp.uni-trier.de/db/conf/3dgis']
-    assert url_conferences[-1] == 'http://dblp.uni-trier.de/db/conf/ACMse'
+                                   'http://dblp.uni-trier.de/db/conf/3dgis']
+    assert 'http://dblp.uni-trier.de/db/conf/amcc' in url_conferences
 
 def test_crawl_site():
     url = 'http://dblp.uni-trier.de/pers/hd/w/Walker:David'
