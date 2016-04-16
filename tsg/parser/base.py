@@ -2,6 +2,7 @@ import re
 import json
 import uuid
 import logging
+import os
 
 from lxml import etree
 
@@ -32,14 +33,32 @@ def parse_text(unparsed):
     return parsed.strip()
 
 
+def url_from_filename(input_path):
+    base_url = 'http://dblp.uni-trier.de/{}/{}'
+    document_type, midpath, endpath = re.match('([^_]*)_([^_]*)_([^\.]*)',
+                                               os.path.basename(input_path)).groups()
+    if document_type == 'author':
+        return base_url.format('pers/hd', '{}/{}'.format(midpath, endpath))
+
+    elif document_type == 'journal':
+        return base_url.format('db/journals', '{}/{}.html'.format(midpath, endpath))
+
+    elif document_type == 'conference':
+        return base_url.format('db/conf', endpath)
+
+
+
+
 def parse_document(document_type, input_path):
     title, words = extract_content(input_path)
     parsed = parse_text(words)
     parsed_title = parse_text(title)
+    parsed_url = url_from_filename(input_path)
     data = {
         'isbn': '',
         'content': parsed,
         'title': parsed_title,
+        'url': parsed_url,
         'uuid': str(uuid.uuid4()),
         'type': document_type
     }

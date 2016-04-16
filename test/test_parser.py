@@ -23,8 +23,8 @@ def test_text_conversion():
 
 
 def test_extract_words():
-    input_file = 'test/files/ftml_ftml2.html'
-    with open('test/files/ftml_ftml2_words.json') as f:
+    input_file = 'test/files/journal_ftml_ftml2.html'
+    with open('test/files/journal_ftml_ftml2_words.json') as f:
         extracted_words_target = json.load(f)
     title, words = extract_content(input_file)
     eq_(extracted_words_target['words'], words)
@@ -34,8 +34,8 @@ def test_extract_words():
 
 @mock.patch('uuid.uuid4', return_value=TEST_UUID)
 def test_parse_document(uuid4):
-    input_file = 'test/files/ftml_ftml2.html'
-    target_output_file = 'test/files/ftml_ftml2_target.json'
+    input_file = 'test/files/journal_ftml_ftml2.html'
+    target_output_file = 'test/files/journal_ftml_ftml2_target.json'
     output_file = '{}{}.json'.format(config.PARSED_DIR, str(TEST_UUID))
     #  url = 'http://dblp.uni-trier.de/db/journals/ftml/ftml2.html'
     #
