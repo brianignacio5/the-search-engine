@@ -2,26 +2,29 @@ import math
 import numpy as np
 import json
 import operator
+
 from tsg.config import DICTIONARY_PATH, INDEXINFO_PATH
+from tsg.ranker.hasher import hash_index_terms
 
 
-def get_dictionary_term_list(term,index_dictionary_path=DICTIONARY_PATH) :
+def get_dictionary_term_list(term,index_dictionary_path=DICTIONARY_PATH):
 
-    # TODO Modify dictionary to use a position instead of reading
-    # the whole dictionary. Use file.seek(position, 0) and get
-    # position from dictionary hash.
+    if not get_dictionary_term_list.index_hash:
+        get_dictionary_term_list.index_hash = hash_index_terms(index_dictionary_path)
 
-    term_list = { }
+    document_list = {}
     with open(index_dictionary_path) as dict_f:
-        for line in dict_f:
-            line_term, documents = line.split(' ')
+        dict_f.seek(get_dictionary_term_list.index_hash[term][0])
+        line_term, documents = dict_f.readline().replace('\n', '').split(' ')
 
-            if term == line_term:
-                parts = documents.split(',')
-                for doc_data in parts:
-                    doc_data_parts = doc_data.split(':')
-                    term_list[doc_data_parts[0]] = float(doc_data_parts[1].replace("\n",""))
-    return term_list
+        assert term == line_term
+
+        for doc_data in documents.split(','):
+            uuid, weight = doc_data.split(':')
+            document_list[uuid] = float(weight)
+
+    return document_list
+get_dictionary_term_list.index_hash = None
 
 def get_number_of_docs(index_dictionary_path):
     dict_f = { }
