@@ -2,12 +2,13 @@ import os
 import math
 import json
 
+import numpy as np
 from nose.tools import eq_
 from nose import with_setup
 import mock
 
 
-from tsg.config import DATA_DIR
+from tsg.config import DATA_DIR, FIELD_WEIGHTS
 from tsg.indexer.base import parse_term, hash_index,\
     create_index, create_indexinfo
 
@@ -17,10 +18,15 @@ def test_parse_term():
     term_file = 'test/files/{}.csv'.format(TERM)
     N = 3
 
+
+    # These values are taken from aa.csv directly
+    w1count = (np.array([0,1,0,3]) * FIELD_WEIGHTS).sum()
+    w2count = (np.array([0,1,0,1]) * FIELD_WEIGHTS).sum()
+
     termline = parse_term(term_file, N)
 
-    w1 = (1+math.log10(4))*math.log10(N/2)
-    w2 = (1+math.log10(2))*math.log10(N/2)
+    w1 = (1+math.log10(w1count))*math.log10(N/2)
+    w2 = (1+math.log10(w2count))*math.log10(N/2)
 
     eq_(termline,
         '598859a0-eaa7-466a-8919-e6260c89edef:{},'
