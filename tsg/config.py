@@ -25,4 +25,8 @@ CSV_HEADER = ','.join(['uuid'] + FIELDS)
 
 DICTIONARY_PATH = DATA_DIR + 'dictionary.dat'
 INDEXINFO_PATH = DATA_DIR + 'indexinfo.json'
-THROTTLE_SECONDS = 1.6
+
+THROTTLE_SECONDS = 1.6  # default throttle time, gets replaced by robots.txt,
+                        # parsing
+ALLOWED_SITES = []
+DISALLOWED_SITES = []
