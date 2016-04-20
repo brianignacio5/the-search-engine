@@ -140,7 +140,7 @@ def rank(query_terms, index_dictionary_path=DICTIONARY_PATH,
     or_scores = cosine_score_calc(query_terms, index_dictionary_path, index_info_path)
 
     # TODO Add PageRank scores
-    # loop: for each key (docID) add pagerank(docId) score
+    # loop: for each key (docID) add pagerank(docId) score.
 
     sorted_docs = combine_and_or_scores(and_scores, or_scores)
 
