@@ -4,8 +4,9 @@ import re
 import os
 import logging
 import validators
-from tsg.config import RAW_DIR
+from tsg import config
 from tsg.crawler.downloader import get_site
+from tsg.robots_parser import parse_robots
 
 
 def crawl_site(url, category):
@@ -17,7 +18,7 @@ def crawl_site(url, category):
                                    '' if url_parts[1][-5:] == '.html'
                                    else'.html')
 
-    doc_path = RAW_DIR + filename
+    doc_path = config.RAW_DIR + filename
     if os.path.isfile(doc_path):
         logging.warn('File {} exists already. Skipping'.format(doc_path))
         return
@@ -67,6 +68,9 @@ def crawl_urls(url):
 
 
 def crawl_loop(category, n=1):
+    robots_file = get_site('http://dblp.uni-trier.de/robots.txt')
+    config.THROTTLE_SECONDS, config.ALLOWED_SITES, config.DISALLOWED_SITES = \
+        parse_robots(robots_file.content)
 
     if category == 'journal':
         url = 'http://dblp.uni-trier.de/db/journals/?pos={}'
