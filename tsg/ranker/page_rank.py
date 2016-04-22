@@ -1,4 +1,3 @@
-from collections import defaultdict
 import re
 from lxml import etree
 import glob, os
@@ -9,7 +8,10 @@ def parse_link(doc_link):
 	Define a function which take a link and obtain the doc_filename string
 	and the type of document: journal, conference or author.
 	'''
-	link_parts = re.search('([^/]*)/([^/]*)$', doc_link).groups()
+	link_parts = list(re.search('([^/]*)/([^/]*)$', doc_link).groups())
+
+	if "#" in link_parts[1]:
+		link_parts[1] = link_parts[1].split("#")[0]
 
 	if "pers" in doc_link :
 		category = "author"
@@ -30,7 +32,8 @@ def parse_link(doc_link):
 
 def get_docs_for_target_doc(html_files_path= RAW_DIR):
 	doc_dict = {}
-	xpath_string = "//div[@id='main']/ul[@class='publ-list']//span/a/@href"
+	# xpath_string = "//div[@id='main']/ul[@class='publ-list']//span/a/@href"
+	xpath_string = "//div[@class='data']//a/@href" # OK for Journals and authors
 	parser = etree.HTMLParser()
 	os.chdir(html_files_path)
 	for doc_filename in glob.glob("*.html"):
@@ -44,7 +47,9 @@ def get_docs_for_target_doc(html_files_path= RAW_DIR):
 				#Return doc_filename and doc_type: author, conference or journal
 				if doc_type in ["author", "conference", "journal"]:
 					if (target_doc in doc_dict and doc_filename not in doc_dict[target_doc]):
-						doc_dict[target_doc] = [doc_dict[target_doc], doc_filename]
+						# doc_dict[target_doc] = [doc_dict[target_doc], doc_filename]
+						doc_dict[target_doc].append(doc_filename)
 					elif target_doc not in doc_dict:
 						doc_dict[target_doc] = [doc_filename]
+
 	return doc_dict
