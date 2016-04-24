@@ -31,11 +31,6 @@ def crawl_site(url, category):
     except requests.exceptions.HTTPError:
         pass
 
-def crawl_site_journal_wrap(url,category):
-    if category == 'journal':
-        crawl_journal_subsites(url)
-    else:
-        crawl_site(url,category)
 
 def crawl_journal_url(journal_url):
     logging.info('Downloading URL {}'.format(journal_url))
@@ -52,14 +47,32 @@ def crawl_journal_url(journal_url):
     journal_links = [journal_info_links,journal_volume_links]
     return journal_links
 
+def crawl_conference_url(conference_url):
+    """ Crawl URLs for conference details
+
+    """
+    logging.info('Downloading URL {}'.format(conference_url))
+    conference_site = get_site(conference_url)
+    tree = html.fromstring(conference_site.content)
+    conference_details_urls = \
+        tree.xpath('//div[@class="data"]/a[text()="[contents]"]/@href')
+    return conference_details_urls
+
+
 def crawl_journal_subsites(journal_url):
     logging.info('Crawling journal volumes in {}'.format(journal_url))
     journal_links = crawl_journal_url(journal_url)
     for journal_volume_site in journal_links[1]:
         crawl_site(journal_volume_site,'journal')
 
-def crawl_urls(url):
 
+def crawl_conference_subsites(conference_url):
+    logging.info('Crawling conference details in {}'.format(conference_url))
+    conference_links = crawl_conference_url(conference_url)
+    for conference_details_url in conference_links:
+        crawl_site(conference_details_url, 'conference')
+
+def crawl_urls(url):
     logging.info('Downloading URL {}'.format(url))
     webpage = get_site(url)
     tree = html.fromstring(webpage.content)
@@ -70,7 +83,7 @@ def crawl_urls(url):
 def crawl_loop(category, n=1):
     robots_file = get_site('http://dblp.uni-trier.de/robots.txt')
     config.THROTTLE_SECONDS, config.ALLOWED_SITES, config.DISALLOWED_SITES = \
-        parse_robots(robots_file.content)
+        parse_robots(robots_file.text)
 
     if category == 'journal':
         url = 'http://dblp.uni-trier.de/db/journals/?pos={}'
@@ -90,6 +103,12 @@ def crawl_loop(category, n=1):
             logging.warn('Didn\' find any links')
             break
         for link in links:
-            crawl_site_journal_wrap(link, category)
+            if category == 'journal':
+                crawl_journal_subsites(link)
+            elif category == 'conference':
+                crawl_site(link, category)
+                crawl_conference_subsites(link)
+            else:
+                crawl_site(link, category)
         n += pagination
     return n

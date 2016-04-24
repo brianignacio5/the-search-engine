@@ -23,7 +23,12 @@ def extract_content(input_file):
                       format(input_file))
         title = ''
 
-    return title, words.replace('\xa0', ' ')
+    try:
+        isbn = tree.xpath('//span[@itemprop="isbn"]/text()')[0]
+    except IndexError:
+        isbn = ''
+
+    return title, words.replace('\xa0', ' '), isbn
 
 
 def parse_text(unparsed):
@@ -44,18 +49,21 @@ def url_from_filename(input_path):
         return base_url.format('db/journals', '{}/{}.html'.format(midpath, endpath))
 
     elif document_type == 'conference':
-        return base_url.format('db/conf', endpath)
+        if midpath != 'conf':
+            return base_url.format('db/conf', '{}/{}.html'.format(midpath, endpath))
+        else:
+            return base_url.format('db/conf', endpath)
 
 
 
 
 def parse_document(document_type, input_path):
-    title, words = extract_content(input_path)
+    title, words, isbn = extract_content(input_path)
     parsed = parse_text(words)
     parsed_title = parse_text(title)
     parsed_url = url_from_filename(input_path)
     data = {
-        'isbn': '',
+        'isbn': isbn,
         'content': parsed,
         'title': parsed_title,
         'url': parsed_url,
