@@ -83,7 +83,7 @@ def crawl_urls(url):
 def crawl_loop(category, n=1):
     robots_file = get_site('http://dblp.uni-trier.de/robots.txt')
     config.THROTTLE_SECONDS, config.ALLOWED_SITES, config.DISALLOWED_SITES = \
-        parse_robots(robots_file.content)
+        parse_robots(robots_file.text)
 
     if category == 'journal':
         url = 'http://dblp.uni-trier.de/db/journals/?pos={}'
@@ -104,11 +104,11 @@ def crawl_loop(category, n=1):
             break
         for link in links:
             if category == 'journal':
-                crawl_journal_subsites(url)
+                crawl_journal_subsites(link)
             elif category == 'conference':
-                crawl_site(url, category)
-                crawl_conference_subsites(url)
+                crawl_site(link, category)
+                crawl_conference_subsites(link)
             else:
-                crawl_site(url,category)
+                crawl_site(link, category)
         n += pagination
     return n
