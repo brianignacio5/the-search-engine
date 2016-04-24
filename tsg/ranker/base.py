@@ -50,28 +50,28 @@ def calculate_query_term_weight(term, query_terms, index_dictionary_path=DICTION
 def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH, 
     index_info_path = INDEXINFO_PATH):
     
-    results_keys = set()
+    common__doc_keys = set()
     terms_documents = {}
-    scores = {}
+    and_scored_docs = {}
     doc_length = {}
     query_length = {}
 
     for term in query_terms:
         terms_documents[term] = get_dictionary_term_list(term, index_dictionary_path)
-        if len(results_keys) == 0:
-            results_keys = terms_documents[term].keys()
+        if len(common__doc_keys) == 0:
+            common__doc_keys = terms_documents[term].keys()
         else:
-            results_keys &= terms_documents[term].keys()
+            common__doc_keys &= terms_documents[term].keys()
 
-    for key in results_keys:
+    for key in common__doc_keys:
         for term in query_terms:
             if key in terms_documents[term].keys():
                 query_term_weight = calculate_query_term_weight(term,query_terms,
             index_dictionary_path, index_info_path)
-                if key in scores:
-                    scores[key] += float(terms_documents[term][key])*float(query_term_weight)
+                if key in and_scored_docs:
+                    and_scored_docs[key] += float(terms_documents[term][key])*float(query_term_weight)
                 else:
-                    scores[key] = float(terms_documents[term][key])*float(query_term_weight)
+                    and_scored_docs[key] = float(terms_documents[term][key])*float(query_term_weight)
 
                 if key in doc_length:
                     doc_length[key] += math.pow(float(terms_documents[term][key]), float(2))
@@ -80,13 +80,13 @@ def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH,
                     doc_length[key] = math.pow(float(terms_documents[term][key]), float(2))
                     query_length[key] = math.pow(float(query_term_weight), float(2))
 
-    for key in scores:
+    for key in and_scored_docs:
         try:
-            scores[key] = scores[key] / (math.sqrt(doc_length[key])*math.sqrt(query_length[key]))
+            and_scored_docs[key] = and_scored_docs[key] / (math.sqrt(doc_length[key])*math.sqrt(query_length[key]))
         except ZeroDivisionError:
-            scores[key] = 0
+            and_scored_docs[key] = 0
 
-    return scores
+    return and_scored_docs
 
 def or_score_calc(query_terms, index_dictionary_path=DICTIONARY_PATH,
     index_info_path = INDEXINFO_PATH):
@@ -140,20 +140,20 @@ def rank(query_terms, index_dictionary_path=DICTIONARY_PATH,
     and retrieved a list of docs ordered by score and doc_id as
     tuples [(doc_1,score_1),(doc_2, score_2), ..., (doc_n,score_n)]
     '''
-    and_scores = {}
-    or_scores = {}
+    and_scored_docs = {}
+    or_scored_docs = {}
     sorted_docs = []
 
     if rank_method == "and":
-        and_scores = and_score_calc(query_terms, index_dictionary_path, index_info_path)
-        sorted_docs = sorted(and_scores.items(), key = operator.itemgetter(1, 0), reverse = True)
+        and_scored_docs = and_score_calc(query_terms, index_dictionary_path, index_info_path)
+        sorted_docs = sorted(and_scored_docs.items(), key = operator.itemgetter(1, 0), reverse = True)
     elif rank_method == "or":
-        or_scores = or_score_calc(query_terms, index_dictionary_path, index_info_path)
-        sorted_docs = sorted(or_scores.items(), key = operator.itemgetter(1, 0), reverse = True)
+        or_scored_docs = or_score_calc(query_terms, index_dictionary_path, index_info_path)
+        sorted_docs = sorted(or_scored_docs.items(), key = operator.itemgetter(1, 0), reverse = True)
     elif rank_method == "and_or_extended":
-        and_scores = and_score_calc(query_terms, index_dictionary_path, index_info_path)
-        or_scores = or_score_calc(query_terms, index_dictionary_path, index_info_path)
-        sorted_docs = combine_and_or_scores(and_scores, or_scores)
+        and_scored_docs = and_score_calc(query_terms, index_dictionary_path, index_info_path)
+        or_scored_docs = or_score_calc(query_terms, index_dictionary_path, index_info_path)
+        sorted_docs = combine_and_or_scores(and_scored_docs, or_scored_docs)
 
     # TODO Add PageRank scores
     # loop: for each key (docID) add pagerank(docId) score.
