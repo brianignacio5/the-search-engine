@@ -74,9 +74,9 @@ def test_and_score_calc():
     scored_docs = {'15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0': 0.9998169851514684, 
               '7dd5a186-1dfe-4be6-be0b-ded65e8067c9': 0.9997654994406655}
 
-    scores_by_conjunctive = and_score_calc(query_terms, TEST_DICT_PATH, TEST_INDEXINFO_PATH)
+    scored_docs_by_function = and_score_calc(query_terms, TEST_DICT_PATH, TEST_INDEXINFO_PATH)
 
-    assert scores_by_conjunctive == scored_docs
+    assert scored_docs_by_function == scored_docs
 
 @with_setup(create_dictionary_index,remove_test_dict_info)
 def test_or_score_calc():
@@ -88,10 +88,10 @@ def test_or_score_calc():
               '15da4df3-9ef1-4e1a-b0ba-f93bf05a25d0': 0.9998169851514684}
 
 
-    scores_by_function = or_score_calc(query_terms, TEST_DICT_PATH, TEST_INDEXINFO_PATH)
+    scored_docs_by_function = or_score_calc(query_terms, TEST_DICT_PATH, TEST_INDEXINFO_PATH)
 
 
-    assert scores_by_function == scored_docs
+    assert scored_docs_by_function == scored_docs
 
 @with_setup(create_dictionary_index,remove_test_dict_info)
 def test_combine_and_or_scores():
@@ -106,9 +106,9 @@ def test_combine_and_or_scores():
               ('7dd5a186-1dfe-4be6-be0b-ded65e8067c9', 0.9997654994406655), 
               ('c7c1d354-4b85-438b-bb2e-89350e40e33f', 0.9999984674316662)]
 
-    scores_by_function = combine_and_or_scores(and_scores, or_scores)
+    scored_docs_by_function = combine_and_or_scores(and_scores, or_scores)
 
-    assert scores_by_function == scored_docs
+    assert scored_docs_by_function == scored_docs
 
 
 @with_setup(create_dictionary_index,remove_test_dict_info)
@@ -120,6 +120,6 @@ def test_rank():
               ('7dd5a186-1dfe-4be6-be0b-ded65e8067c9', 0.9997654994406655), 
               ('c7c1d354-4b85-438b-bb2e-89350e40e33f', 0.9999984674316662)]
 
-    scores_by_function = rank(query_terms, TEST_DICT_PATH, TEST_INDEXINFO_PATH, "and_or_extended")
+    scored_docs_by_function = rank(query_terms, TEST_DICT_PATH, TEST_INDEXINFO_PATH, "and_or_extended")
 
-    assert scores_by_function == scored_docs
+    assert scored_docs_by_function == scored_docs
