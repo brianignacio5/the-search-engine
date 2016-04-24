@@ -30,7 +30,7 @@ def parse_link(doc_link):
 
 	return [doc_filename, category]
 
-def get_docs_for_target_doc(html_files_path= RAW_DIR):
+def build_link_database(html_files_path= RAW_DIR):
 	doc_dict = {}
 	# xpath_string = "//div[@id='main']/ul[@class='publ-list']//span/a/@href"
 	xpath_string = "//div[@class='data']//a/@href" # OK for Journals and authors
@@ -53,3 +53,15 @@ def get_docs_for_target_doc(html_files_path= RAW_DIR):
 						doc_dict[target_doc] = [doc_filename]
 
 	return doc_dict
+
+def calc_page_rank(doc_filename, link_database_path):
+
+	# Something nice
+	doc_inlinks= []
+
+	with open(link_database_path) as link_db:
+		for line in link_db:
+			if line.startswith(doc_filename):
+				doc_inlinks = list(line[len(doc_filename)+1:].split(','))
+
+	return 0
