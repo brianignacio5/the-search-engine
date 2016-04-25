@@ -5,7 +5,7 @@ import re
 import logging
 
 from tsg.indexer import create_index
-from tsg.config import RAW_DIR, INTERMEDIATE_DIR,\
+from tsg.config import RAW_DIR, PARSED_DIR, INTERMEDIATE_DIR,\
     DICTIONARY_PATH, INDEXINFO_PATH
 
 logging.basicConfig(level=logging.INFO)
@@ -20,6 +20,7 @@ def main():
         return
 
     create_index(INTERMEDIATE_DIR,
+                 PARSED_DIR,
                  num_documents,
                  DICTIONARY_PATH,
                  INDEXINFO_PATH)
