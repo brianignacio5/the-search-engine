@@ -25,7 +25,7 @@ FIELD_WEIGHTS = [2.5, 2.5, 5, 1]
 CSV_HEADER = ','.join(['uuid'] + FIELDS)
 
 DICTIONARY_PATH = DATA_DIR + 'dictionary.dat'
-PAGERANK_PATH = DATA_DIR + 'pagerank.json'
+PAGERANK_PATH = DATA_DIR + 'pagerank.csv'
 INDEXINFO_PATH = DATA_DIR + 'indexinfo.json'
 
 THROTTLE_SECONDS = 1.6  # default throttle time, gets replaced by robots.txt

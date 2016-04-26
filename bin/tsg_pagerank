@@ -6,7 +6,7 @@ import sys
 import pandas as pd
 
 from tsg.config import RAW_DIR, PAGERANK_PATH
-from tsg.indexer.page_rank import test_calc_page_rank
+from tsg.indexer.page_rank import calc_page_rank
 
 logging.basicConfig(level=logging.INFO)
 
@@ -17,12 +17,12 @@ def main():
         sys.exit(0)
 
     # get page rank
-    page_rank_scores = test_calc_page_rank(RAW_DIR)
+    page_rank_scores = calc_page_rank(RAW_DIR)
 
     # convert to dataframe
     df = pd.DataFrame(page_rank_scores)
 
-    df.to_json(PAGERANK_PATH)
+    df.to_csv(PAGERANK_PATH)
 
 
 if __name__ == "__main__":
