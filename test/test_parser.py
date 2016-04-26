@@ -26,11 +26,12 @@ def test_extract_words():
     input_file = 'test/files/journal_ftml_ftml2.html'
     with open('test/files/journal_ftml_ftml2_words.json') as f:
         extracted_words_target = json.load(f)
-    title, words, isbn = extract_content(input_file)
+    title, words, isbn, listings_count = extract_content(input_file)
     eq_(isbn, '')
     eq_(extracted_words_target['words'], words)
     eq_(title,
         'Foundations and Trends in Machine Learning, Volume 2 slash/word')
+    eq_(listings_count, 4)
 
 
 @mock.patch('uuid.uuid4', return_value=TEST_UUID)
