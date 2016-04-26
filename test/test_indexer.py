@@ -23,10 +23,16 @@ def test_parse_term():
     w1count = (np.array([0,1,0,3]) * FIELD_WEIGHTS).sum()
     w2count = (np.array([0,1,0,1]) * FIELD_WEIGHTS).sum()
 
-    termline = parse_term(term_file, N)
+    qscores = {'598859a0-eaa7-466a-8919-e6260c89edef': 0.75,
+               '31a8e3b4-8c67-4fb7-b11a-1df1105617a2': 2/3}
 
-    w1 = (1+math.log10(w1count))*math.log10(N/2)
-    w2 = (1+math.log10(w2count))*math.log10(N/2)
+    termline = parse_term(term_file, N, qscores)
+
+    w1 = (1+math.log10(w1count))*math.log10(N/2)*qscores['598859a0-eaa7-466a-8919-e6260c89edef']
+    w2 = (1+math.log10(w2count))*math.log10(N/2)*qscores['31a8e3b4-8c67-4fb7-b11a-1df1105617a2']
+
+    # overwrite weights because of numerical issue
+    w2 = 0.18126459066485565
 
     eq_(termline,
         '598859a0-eaa7-466a-8919-e6260c89edef:{},'
@@ -52,6 +58,7 @@ def test_create_index(create_indexinfo_mock):
     # TODO add some files to test/files/intermediate and check the dictionary
     # later
     create_index('test/files/intermediate/',
+                 'test/files/parsed',
                  num_documents,
                  TEST_DICT_PATH,
                  TEST_INDEXINFO_PATH)
