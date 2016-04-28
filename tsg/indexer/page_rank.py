@@ -102,7 +102,7 @@ def calc_page_rank(html_files_path=RAW_DIR):
 				pagerank_per_doc[doc] = tmp_pagerank_per_doc[doc]
 				iteration_flag = True
 
-	sorted_pagerank_per_docs = sorted(pagerank_per_doc.items(), 
-		key = operator.itemgetter(1,0), reverse = True)
+	sorted_pagerank_per_docs = OrderedDict(sorted(pagerank_per_doc.items(), 
+		key = operator.itemgetter(1,0), reverse = True))
 
 	return sorted_pagerank_per_docs
