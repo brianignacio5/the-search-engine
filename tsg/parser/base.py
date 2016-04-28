@@ -61,8 +61,8 @@ def parse_document(document_type, input_path):
     parsed = parse_text(words)
     parsed_title = parse_text(title)
     parsed_url = url_from_filename(input_path)
-    uuid = re.match('.*/([^\./]*)\.html$').groups()[0]
-    
+    uuid = os.path.splitext(os.path.basename(input_path))[0]
+
     data = {
         'listings_count': listings_count,
         'isbn': isbn,
