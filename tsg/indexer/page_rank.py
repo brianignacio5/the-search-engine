@@ -1,8 +1,8 @@
 import re
 from collections import OrderedDict
 from lxml import etree
-import glob, os
-from tsg.config import RAW_DIR, INDEXINFO_PATH
+import os
+from tsg.config import RAW_DIR
 import operator
 
 def parse_link(doc_link):

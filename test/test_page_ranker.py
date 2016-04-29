@@ -1,7 +1,7 @@
 import os
 import tsg.indexer.page_rank as page_rank
 
-RAW_TEST_DIRECTORY = os.path.abspath('test') + "/files/pagerank/"
+RAW_TEST_DIRECTORY = os.path.dirname(__file__) + "/files/pagerank/"
 files = [RAW_TEST_DIRECTORY + "author_a_A:Almaaf_Bader_Ali.html",
 		 RAW_TEST_DIRECTORY + "journal_ijea_ijea5.html",
 		 RAW_TEST_DIRECTORY + "conference_aaip_aaip2009.html"]
