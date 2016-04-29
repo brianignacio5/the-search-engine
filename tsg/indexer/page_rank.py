@@ -50,8 +50,6 @@ def get_page_outlinks(doc_path):
 
 def build_link_database(html_files_path= RAW_DIR):
 	doc_dict = {}
-	# os.chdir(html_files_path)
-	# for doc_filename in glob.glob("*.html"):
 	for doc_filename in os.listdir(html_files_path):
 		if doc_filename.endswith(".html"):
 			doc_path = html_files_path + doc_filename
