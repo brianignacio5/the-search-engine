@@ -52,7 +52,7 @@ def get_page_outlinks(doc_path):
     return page_outfiles
 
 
-def build_link_database(html_files_path= RAW_DIR):
+def build_link_database(html_files_path=RAW_DIR):
     logging.info('Start building link database')
     log_cnt = 0
     doc_dict = {}
@@ -67,21 +67,23 @@ def build_link_database(html_files_path= RAW_DIR):
             for target_doc in doc_outlinks:
                 doc_type = target_doc.split('_')[0]
                 if doc_type in ["author", "conference", "journal"]:
-                    if (target_doc in doc_dict and doc_filename not in doc_dict[target_doc]):
+                    if (target_doc in doc_dict and doc_filename not in
+                            doc_dict[target_doc]):
                         doc_dict[target_doc].append(doc_filename)
                     elif target_doc not in doc_dict:
                         doc_dict[target_doc] = [doc_filename]
     # Sort alphabetically
-    ordered_db = OrderedDict(sorted(doc_dict.items(), key= lambda t: t[0]))
+    ordered_db = OrderedDict(sorted(doc_dict.items(), key=lambda t: t[0]))
 
     return ordered_db
+
 
 def calc_page_rank(html_files_path=RAW_DIR):
     logging.info('Starting calc_page_rank')
 
-    d = 0.85 # Damping in PageRank Algorithm
-    threshold = 0.0000001 # 1x 10^-6
-    iteration_flag = True # Keep page rank iteration until threshold is met
+    d = 0.85  # Damping in PageRank Algorithm
+    threshold = 0.0001  # 1x 10^-3
+    iteration_flag = True  # Keep page rank iteration until threshold is met
     doc_inlinks = {}
     doc_outlinks = {}
     pagerank_per_doc = {}
@@ -120,12 +122,14 @@ def calc_page_rank(html_files_path=RAW_DIR):
         logging.info('Now investigating stop condition for caculating the'
                      'page rank')
 
+        iteration_flag = False
+        # TODO, can't we just move the whole dict instead of doing it in a loop?
+        # like so: pagerank_per_doc = tmp_pagerank_per_doc
         for doc in tmp_pagerank_per_doc:
-            if (pagerank_per_doc[doc] - tmp_pagerank_per_doc[doc] < threshold):
-                iteration_flag = False
-            else:
-                pagerank_per_doc[doc] = tmp_pagerank_per_doc[doc]
+            if (pagerank_per_doc[doc] - tmp_pagerank_per_doc[doc] > threshold):
                 iteration_flag = True
+
+            pagerank_per_doc[doc] = tmp_pagerank_per_doc[doc]
 
     sorted_pagerank_per_docs = OrderedDict(sorted(pagerank_per_doc.items(),
                                                   key=operator.itemgetter(1, 0),
