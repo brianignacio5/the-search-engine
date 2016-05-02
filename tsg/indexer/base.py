@@ -38,6 +38,8 @@ def create_index(intermediate_dir,
                  dictionary_path,
                  indexinfo_path):
 
+    log_cnt = 0
+
     # calculate quality scores
     qscores = qscore.get_scores(parsed_dir)
 
@@ -45,7 +47,6 @@ def create_index(intermediate_dir,
     files = glob.glob(intermediate_dir+'*.csv')
     files.sort()
 
-    # TODO: move this to indexer
     compiled_termname_re = re.compile('([^/]*).csv')
     with open(dictionary_path, 'w') as dictionary_file:  # deletes dictionary!
         for term_file in files:
@@ -54,6 +55,10 @@ def create_index(intermediate_dir,
 
             dictionary_file.write('{} {}\n'.format(term, indexed_line))
             logging.info('Indexed term {}'.format(term))
+
+            if log_cnt % 1000000 == 0:
+                logging.info('created index-line for {} files'.format(log_cnt))
+            log_cnt += 1
 
     create_indexinfo(num_documents, indexinfo_path)
 
