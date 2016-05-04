@@ -1,15 +1,13 @@
 #!/usr/bin/env python
 import nose
 from nose.tools import eq_
-import mock
+import os
 
 from tsg import config
-import uuid
 import json
 from tsg.parser import parse_document
 from tsg.parser.base import extract_content, parse_text
 
-TEST_UUID = uuid.UUID('70d83dba-90f6-4b0b-b465-9758f8e33874')
 
 
 def test_text_conversion():
@@ -34,11 +32,13 @@ def test_extract_words():
     eq_(listings_count, 4)
 
 
-@mock.patch('uuid.uuid4', return_value=TEST_UUID)
-def test_parse_document(uuid4):
+def test_parse_document():
     input_file = 'test/files/journal_ftml_ftml2.html'
     target_output_file = 'test/files/journal_ftml_ftml2_target.json'
-    output_file = '{}{}.json'.format(config.PARSED_DIR, str(TEST_UUID))
+
+    uuid = os.path.splitext(os.path.basename(input_file))[0]
+
+    output_file = '{}{}.json'.format(config.PARSED_DIR, uuid)
     #  url = 'http://dblp.uni-trier.de/db/journals/ftml/ftml2.html'
     #
 
@@ -50,7 +50,7 @@ def test_parse_document(uuid4):
     with open(output_file) as f:
         output_dict = json.load(f)
 
-    target_dict['uuid'] = str(TEST_UUID)
+    target_dict['uuid'] = uuid
 
     eq_(target_dict, output_dict)
 
