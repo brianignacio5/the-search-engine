@@ -24,7 +24,7 @@ def parse_link(doc_link):
     elif "journals" in doc_link:
         category = "journal"
     else:
-        raise ValueError('Impossible file found: {}'.format(doc_link))
+        category = "other"
 
     doc_filename = '{}_{}_{}{}'.format(category,
                                        link_parts[0],
