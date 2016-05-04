@@ -2,6 +2,7 @@ import os
 import math
 import json
 
+import pandas as pd
 import numpy as np
 from nose.tools import eq_
 from nose import with_setup
@@ -18,18 +19,29 @@ def test_parse_term():
     term_file = 'test/files/{}.csv'.format(TERM)
     N = 3
 
-
     # These values are taken from aa.csv directly
-    w1count = (np.array([0,1,0,3]) * FIELD_WEIGHTS).sum()
-    w2count = (np.array([0,1,0,1]) * FIELD_WEIGHTS).sum()
+    w1count = (np.array([0, 1, 0, 3]) * FIELD_WEIGHTS).sum()
+    w2count = (np.array([0, 1, 0, 1]) * FIELD_WEIGHTS).sum()
 
     qscores = {'598859a0-eaa7-466a-8919-e6260c89edef': 0.75,
                '31a8e3b4-8c67-4fb7-b11a-1df1105617a2': 2/3}
 
-    termline = parse_term(term_file, N, qscores)
+    pagerank_scores = pd.DataFrame({'pagerank_score': [5, 1]},
+                                   index=['598859a0-eaa7-466a-8919-e6260c89edef',
+                                          '31a8e3b4-8c67-4fb7-b11a-1df1105617a2'])
+    pagerank_scores.index.name = 'uuid'
 
-    w1 = (1+math.log10(w1count))*math.log10(N/2)*qscores['598859a0-eaa7-466a-8919-e6260c89edef']
-    w2 = (1+math.log10(w2count))*math.log10(N/2)*qscores['31a8e3b4-8c67-4fb7-b11a-1df1105617a2']
+    termline = parse_term(term_file, N, qscores, pagerank_scores)
+
+    w1 = (1+math.log10(w1count)) * \
+        math.log10(N/2) * \
+        qscores['598859a0-eaa7-466a-8919-e6260c89edef'] * \
+        pagerank_scores.loc['598859a0-eaa7-466a-8919-e6260c89edef'].pagerank_score
+
+    w2 = (1+math.log10(w2count)) * \
+        math.log10(N/2) * \
+        qscores['31a8e3b4-8c67-4fb7-b11a-1df1105617a2'] * \
+        pagerank_scores.loc['31a8e3b4-8c67-4fb7-b11a-1df1105617a2'].pagerank_score
 
     # overwrite weights because of numerical issue
     w2 = 0.18126459066485565
@@ -41,6 +53,7 @@ def test_parse_term():
 
 TEST_DICT_PATH = DATA_DIR + 'testdict.dat'
 TEST_INDEXINFO_PATH = DATA_DIR + 'testinfo.json'
+TEST_PAGERANK_PATH = DATA_DIR + 'testinfo.json'
 
 
 def clean_testfiles():
@@ -61,7 +74,8 @@ def test_create_index(create_indexinfo_mock):
                  'test/files/parsed',
                  num_documents,
                  TEST_DICT_PATH,
-                 TEST_INDEXINFO_PATH)
+                 TEST_INDEXINFO_PATH,
+                 'test/files/pagerank_a.csv')
 
     assert os.path.isfile(TEST_INDEXINFO_PATH)
     create_indexinfo_mock.assert_called_with(num_documents, TEST_INDEXINFO_PATH)
@@ -79,4 +93,4 @@ def test_create_indexinfo():
 
 def test_hash_index():
     hash_index()
-    pass
+    # TODO

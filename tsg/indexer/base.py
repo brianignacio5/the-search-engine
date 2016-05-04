@@ -11,7 +11,7 @@ from tsg.config import FIELD_WEIGHTS
 from tsg.indexer import qscore
 
 
-def parse_term(term_file, N, qscores):
+def parse_term(term_file, N, qscores, pagerank_scores):
     '''
     N: number of documents in total
     '''
@@ -20,9 +20,16 @@ def parse_term(term_file, N, qscores):
     # count per document
     weighted_sum = (term_df*FIELD_WEIGHTS).sum(axis=1)
     log_weights = (np.log10(weighted_sum)+1)
-    df_qscores = term_df.apply(lambda row: qscores[row.name], axis=1)
+    df_qscores = term_df.apply(lambda row: qscores[row.name],
+                                axis=1)
+    df_pagerank_scores = term_df.apply(lambda row: pagerank_scores.loc[row.name].pagerank_score,
+                                       axis=1)
 
-    term_df['tf-idf'] = log_weights * df_qscores * math.log10(N/len(term_df))
+    term_df['tf-idf'] = \
+        log_weights * \
+        df_qscores * \
+        df_pagerank_scores * \
+        math.log10(N/len(term_df))
 
     term_df.sort_values('tf-idf', ascending=False, inplace=True)
 
@@ -36,12 +43,16 @@ def create_index(intermediate_dir,
                  parsed_dir,
                  num_documents,
                  dictionary_path,
-                 indexinfo_path):
+                 indexinfo_path,
+                 pagerank_path):
 
     log_cnt = 0
 
     # calculate quality scores
     qscores = qscore.get_scores(parsed_dir)
+
+    # load pagerank
+    pagerank_scores = pd.read_csv(pagerank_path, index_col='uuid')
 
     # find all csvs and sort them alphabetically
     files = glob.glob(intermediate_dir+'*.csv')
@@ -51,7 +62,10 @@ def create_index(intermediate_dir,
     with open(dictionary_path, 'w') as dictionary_file:  # deletes dictionary!
         for term_file in files:
             term = compiled_termname_re.search(term_file).groups()[0]
-            indexed_line = parse_term(term_file, num_documents, qscores)
+            indexed_line = parse_term(term_file,
+                                      num_documents,
+                                      qscores,
+                                      pagerank_scores)
 
             dictionary_file.write('{} {}\n'.format(term, indexed_line))
             logging.info('Indexed term {}'.format(term))
