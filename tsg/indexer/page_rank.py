@@ -32,7 +32,7 @@ def parse_link(doc_link):
                                        '' if link_parts[1][-5:] == '.html'
                                        else'.html')
 
-    return [doc_filename, category]
+    return doc_filename
 
 
 def get_page_outlinks(doc_path):
@@ -65,11 +65,15 @@ def build_link_database(html_files_path=RAW_DIR):
         if doc_filename.endswith(".html"):
             doc_path = html_files_path + doc_filename
             doc_outlinks[doc_filename] = get_page_outlinks(doc_path)
-            for target_doc, doc_type in doc_outlinks[doc_filename]:
+            for target_doc in doc_outlinks[doc_filename]:
                 try:
                     doc_dict[target_doc].append(doc_filename)
                 except KeyError:
                     doc_dict[target_doc] = [doc_filename]
+        try:
+            doc_dict[doc_filename]
+        except KeyError:
+            doc_dict[doc_filename] = []
 
     # Unify lists
     for doc, doc_list in doc_dict.items():
@@ -106,7 +110,8 @@ def calc_page_rank(html_files_path=RAW_DIR):
                 if inlink in doc_outlinks:
                     num_outlinks_per_inlink = len(doc_outlinks[inlink])
                     tmp_pagerank_per_doc[doc] += \
-                        d * (pagerank_per_doc[inlink] / num_outlinks_per_inlink)
+                        d * (pagerank_per_doc[inlink] /
+                                num_outlinks_per_inlink)
                 else:
                     tmp_pagerank_per_doc[doc] = 0
 
@@ -118,13 +123,11 @@ def calc_page_rank(html_files_path=RAW_DIR):
                      'page rank')
 
         iteration_flag = False
-        # TODO, can't we just move the whole dict instead of doing it in a loop?
-        # like so: pagerank_per_doc = tmp_pagerank_per_doc
         for doc in tmp_pagerank_per_doc:
             if (pagerank_per_doc[doc] - tmp_pagerank_per_doc[doc] > threshold):
                 iteration_flag = True
 
-            pagerank_per_doc[doc] = tmp_pagerank_per_doc[doc]
+        pagerank_per_doc = tmp_pagerank_per_doc
 
     sorted_pagerank_per_docs = OrderedDict(sorted(pagerank_per_doc.items(),
                                                   key=operator.itemgetter(1, 0),
