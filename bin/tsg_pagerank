@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import logging
-import sys
 
 import pandas as pd
 
@@ -12,15 +11,14 @@ logging.basicConfig(level=logging.INFO)
 
 
 def main():
-    print('Do you want to delete pagerank file? y/N')
-    if input() != 'y':
-        sys.exit(0)
-
     # get page rank
     page_rank_scores = calc_page_rank(RAW_DIR)
 
     # convert to dataframe
-    df = pd.DataFrame(page_rank_scores)
+    df = pd.DataFrame.from_dict(page_rank_scores, orient='index')
+
+    df.columns = ['pagerank_score']
+    df.index.name = 'uuid'
 
     df.to_csv(PAGERANK_PATH)
 
