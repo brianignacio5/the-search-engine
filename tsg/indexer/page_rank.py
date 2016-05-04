@@ -24,7 +24,7 @@ def parse_link(doc_link):
     elif "journals" in doc_link:
         category = "journal"
     else:
-        category = ""
+        raise ValueError('Impossible file found: {}'.format(doc_link))
 
     doc_filename = '{}_{}_{}{}'.format(category,
                                        link_parts[0],
@@ -47,7 +47,7 @@ def get_page_outlinks(doc_path):
             page_outlinks = tree.xpath(xpath_string)
 
     for link in page_outlinks:
-        page_outfiles.append(parse_link(link)[0])
+        page_outfiles.append(parse_link(link))
 
     return page_outfiles
 
@@ -56,6 +56,7 @@ def build_link_database(html_files_path=RAW_DIR):
     logging.info('Start building link database')
     log_cnt = 0
     doc_dict = {}
+    doc_outlinks = {}
     for doc_filename in os.listdir(html_files_path):
         log_cnt += 1
         if log_cnt % 100000 == 0:
@@ -63,19 +64,23 @@ def build_link_database(html_files_path=RAW_DIR):
                 'Building Link database. Now at file {}'.format(log_cnt))
         if doc_filename.endswith(".html"):
             doc_path = html_files_path + doc_filename
-            doc_outlinks = get_page_outlinks(doc_path)
-            for target_doc in doc_outlinks:
-                doc_type = target_doc.split('_')[0]
-                if doc_type in ["author", "conference", "journal"]:
-                    if (target_doc in doc_dict and doc_filename not in
-                            doc_dict[target_doc]):
-                        doc_dict[target_doc].append(doc_filename)
-                    elif target_doc not in doc_dict:
-                        doc_dict[target_doc] = [doc_filename]
+            doc_outlinks[doc_filename] = get_page_outlinks(doc_path)
+            for target_doc, doc_type in doc_outlinks[doc_filename]:
+                try:
+                    doc_dict[target_doc].append(doc_filename)
+                except KeyError:
+                    doc_dict[target_doc] = [doc_filename]
+
+    # Unify lists
+    for doc, doc_list in doc_dict.items():
+        doc_dict[doc] = list(set(doc_list))
+
     # Sort alphabetically
     ordered_db = OrderedDict(sorted(doc_dict.items(), key=lambda t: t[0]))
 
-    return ordered_db
+    logging.info('Finished building link database')
+
+    return ordered_db, doc_outlinks
 
 
 def calc_page_rank(html_files_path=RAW_DIR):
@@ -84,21 +89,11 @@ def calc_page_rank(html_files_path=RAW_DIR):
     d = 0.85  # Damping in PageRank Algorithm
     threshold = 0.0001  # 1x 10^-3
     iteration_flag = True  # Keep page rank iteration until threshold is met
-    doc_inlinks = {}
-    doc_outlinks = {}
-    pagerank_per_doc = {}
     log_cnt = 0
 
-    docs_links_db = build_link_database(html_files_path)
+    docs_links_db, doc_outlinks = build_link_database(html_files_path)
 
-    for doc in docs_links_db.keys():
-        doc_inlinks[doc] = docs_links_db[doc]
-        doc_outlinks[doc] = get_page_outlinks(html_files_path + doc)
-        pagerank_per_doc[doc] = 1
-
-        log_cnt += 1
-        if log_cnt % 100000 == 0:
-            logging.info('Now processing doc_links_db key {}'.format(log_cnt))
+    pagerank_per_doc = {doc: 1.0 for doc in docs_links_db}
 
     while iteration_flag:
         log_cnt = 0
@@ -108,7 +103,7 @@ def calc_page_rank(html_files_path=RAW_DIR):
             tmp_pagerank_per_doc[doc] = (1 - d)
             for inlink in doc_inlinks:
                 num_outlinks_per_inlink = 0
-                if inlink in doc_outlinks.keys():
+                if inlink in doc_outlinks:
                     num_outlinks_per_inlink = len(doc_outlinks[inlink])
                     tmp_pagerank_per_doc[doc] += \
                         d * (pagerank_per_doc[inlink] / num_outlinks_per_inlink)
