@@ -10,7 +10,7 @@ from tsg.config import PARSED_DIR
 
 def extract_content(input_file):
     main_xpath = '//div[@id="main"]//text()'
-    title_xpath = '//h1/text()'
+    title_xpath = '//h1//text()'
     listings_xpath = '//li[contains(@class, "entry")]'
 
     parser = etree.HTMLParser()

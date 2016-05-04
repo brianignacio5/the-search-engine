@@ -13,9 +13,6 @@ logging.basicConfig(level=logging.INFO)
 
 
 def main():
-    print('Careful, this deletes data/parsed/*. Wanna proceed? y/N')
-    if input() != 'y':
-        return
 
     shutil.rmtree(PARSED_DIR)
     os.mkdir(PARSED_DIR)
