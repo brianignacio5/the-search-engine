@@ -47,3 +47,4 @@ def test_calc_page_rank():
 
     for key, value in test_pagerank_per_doc:
         assert key in pagerank_per_doc
+        assert (value - pagerank_per_doc[key]) < 0.00000001
