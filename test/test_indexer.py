@@ -53,7 +53,6 @@ def test_parse_term():
 
 TEST_DICT_PATH = DATA_DIR + 'testdict.dat'
 TEST_INDEXINFO_PATH = DATA_DIR + 'testinfo.json'
-TEST_PAGERANK_PATH = DATA_DIR + 'testinfo.json'
 
 
 def clean_testfiles():
@@ -75,6 +74,7 @@ def test_create_index(create_indexinfo_mock):
                  num_documents,
                  TEST_DICT_PATH,
                  TEST_INDEXINFO_PATH,
+                 'test/files/qscores_a.csv',
                  'test/files/pagerank_a.csv')
 
     assert os.path.isfile(TEST_INDEXINFO_PATH)

@@ -8,7 +8,6 @@ import pandas as pd
 import numpy as np
 
 from tsg.config import FIELD_WEIGHTS
-from tsg.indexer import qscore
 
 
 def parse_term(term_file, N, qscores, pagerank_scores):
@@ -20,7 +19,7 @@ def parse_term(term_file, N, qscores, pagerank_scores):
     # count per document
     weighted_sum = (term_df*FIELD_WEIGHTS).sum(axis=1)
     log_weights = (np.log10(weighted_sum)+1)
-    df_qscores = term_df.apply(lambda row: qscores[row.name],
+    df_qscores = term_df.apply(lambda row: qscores.loc[row.name].qscore,
                                 axis=1)
     df_pagerank_scores = term_df.apply(lambda row: pagerank_scores.loc[row.name].pagerank_score,
                                        axis=1)
@@ -44,12 +43,13 @@ def create_index(intermediate_dir,
                  num_documents,
                  dictionary_path,
                  indexinfo_path,
+                 qscore_path,
                  pagerank_path):
 
     log_cnt = 0
 
     # calculate quality scores
-    qscores = qscore.get_scores(parsed_dir)
+    qscores = pd.read_csv(qscore_path, index_col='uuid')
 
     # load pagerank
     pagerank_scores = pd.read_csv(pagerank_path, index_col='uuid')
