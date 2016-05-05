@@ -17,11 +17,11 @@ def parse_link(doc_link):
     if "#" in link_parts[1]:
         link_parts[1] = link_parts[1].split("#")[0]
 
-    if "pers" in doc_link:
+    if "/pers/" in doc_link:
         category = "author"
-    elif "conf" in doc_link:
+    elif "/conf/" in doc_link:
         category = "conference"
-    elif "journals" in doc_link:
+    elif "/journals/" in doc_link:
         category = "journal"
     else:
         category = "other"
