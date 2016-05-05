@@ -23,8 +23,10 @@ def test_parse_term():
     w1count = (np.array([0, 1, 0, 3]) * FIELD_WEIGHTS).sum()
     w2count = (np.array([0, 1, 0, 1]) * FIELD_WEIGHTS).sum()
 
-    qscores = {'598859a0-eaa7-466a-8919-e6260c89edef': 0.75,
-               '31a8e3b4-8c67-4fb7-b11a-1df1105617a2': 2/3}
+    qscores = pd.DataFrame({'qscore': [0.75, 2/3]},
+                           index=['598859a0-eaa7-466a-8919-e6260c89edef',
+                                  '31a8e3b4-8c67-4fb7-b11a-1df1105617a2'])
+    qscores.index.name = 'uuid'
 
     pagerank_scores = pd.DataFrame({'pagerank_score': [5, 1]},
                                    index=['598859a0-eaa7-466a-8919-e6260c89edef',
@@ -35,12 +37,12 @@ def test_parse_term():
 
     w1 = (1+math.log10(w1count)) * \
         math.log10(N/2) * \
-        qscores['598859a0-eaa7-466a-8919-e6260c89edef'] * \
+        qscores.loc['598859a0-eaa7-466a-8919-e6260c89edef'].qscore * \
         pagerank_scores.loc['598859a0-eaa7-466a-8919-e6260c89edef'].pagerank_score
 
     w2 = (1+math.log10(w2count)) * \
         math.log10(N/2) * \
-        qscores['31a8e3b4-8c67-4fb7-b11a-1df1105617a2'] * \
+        qscores.loc['31a8e3b4-8c67-4fb7-b11a-1df1105617a2'].qscore * \
         pagerank_scores.loc['31a8e3b4-8c67-4fb7-b11a-1df1105617a2'].pagerank_score
 
     # overwrite weights because of numerical issue
