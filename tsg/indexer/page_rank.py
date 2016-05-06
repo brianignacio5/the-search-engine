@@ -2,6 +2,7 @@ import re
 from collections import OrderedDict
 from lxml import etree
 import os
+from os.path import splitext
 from tsg.config import RAW_DIR
 import operator
 import logging
@@ -75,12 +76,17 @@ def build_link_database(html_files_path=RAW_DIR):
         except KeyError:
             doc_dict[doc_filename] = []
 
-    # Unify lists
-    for doc, doc_list in doc_dict.items():
-        doc_dict[doc] = list(set(doc_list))
+    # Unify lists and convert keys to uuid
+    doc_dict = {splitext(doc)[0]: [splitext(d)[0] for d in (set(doc_dict[doc]))]
+                for doc in doc_dict}
+
+    doc_outlinks = {splitext(doc)[0]: [splitext(d)[0] for d in doc_outlinks[doc]]
+                    for doc in doc_outlinks}
 
     # Sort alphabetically
     ordered_db = OrderedDict(sorted(doc_dict.items(), key=lambda t: t[0]))
+
+
 
     logging.info('Finished building link database')
 

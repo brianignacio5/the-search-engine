@@ -28,9 +28,9 @@ def test_get_page_outlinks():
 def test_build_link_database():
 
     #define some docs in DATA_DIR/test/files to use here.
-    test_doc_dict = {'journal_ijea_ijea5.html': ['author_a_A:Almaaf_Bader_Ali.html'],
-                     'journal_journals_lncs.html': ['conference_aaip_aaip2009.html'],
-                     'author_y_Yakushev:Alexey_Rodriguez.html': ['conference_aaip_aaip2009.html']}
+    test_doc_dict = {'journal_ijea_ijea5': ['author_a_A:Almaaf_Bader_Ali'],
+                     'journal_journals_lncs': ['conference_aaip_aaip2009'],
+                     'author_y_Yakushev:Alexey_Rodriguez': ['conference_aaip_aaip2009']}
 
     doc_dict = page_rank.build_link_database(RAW_TEST_DIRECTORY)[0]
 
@@ -39,12 +39,11 @@ def test_build_link_database():
 
 def test_calc_page_rank():
 
-    test_pagerank_per_doc = [('author_t_Tran:Quang=Dung.html', 0.19765190942368532),
-                             ('author_a_Al=Jenaibi:Badreya.html', 0.15401443776897214),
-                             ('author_h_Henderson:Robert.html', 0)]
+    test_pagerank_per_doc = [('author_t_Tran:Quang=Dung', 0.19765190942368532),
+                             ('author_a_Al=Jenaibi:Badreya', 0.15401443776897214),
+                             ('author_h_Henderson:Robert', 0)]
 
     pagerank_per_doc = page_rank.calc_page_rank(RAW_TEST_DIRECTORY)
-
 
     for key, value in test_pagerank_per_doc:
         assert key in pagerank_per_doc
