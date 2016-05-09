@@ -1,4 +1,4 @@
-if [[ $# != 2 ]]; then
+if [[ $# < 2 ]]; then
   echo "This script/docker runs the author crawler from the specified point"
   echo "Help: $0 <datadir> <command to crawl> {<arguments>}"
   exit 1
