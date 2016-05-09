@@ -5,3 +5,4 @@ mock
 pandas
 numpy
 validators
+scipy

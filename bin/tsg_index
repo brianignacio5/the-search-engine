@@ -6,7 +6,7 @@ import logging
 
 from tsg.indexer import create_index
 from tsg.config import RAW_DIR, PARSED_DIR, INTERMEDIATE_DIR,\
-    DICTIONARY_PATH, INDEXINFO_PATH
+    DICTIONARY_PATH, INDEXINFO_PATH, PAGERANK_PATH, QSCORE_PATH
 
 logging.basicConfig(level=logging.INFO)
 
@@ -23,7 +23,9 @@ def main():
                  PARSED_DIR,
                  num_documents,
                  DICTIONARY_PATH,
-                 INDEXINFO_PATH)
+                 INDEXINFO_PATH,
+                 QSCORE_PATH,
+                 PAGERANK_PATH)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,5 @@
 import re
 import json
-import uuid
 import logging
 import os
 
@@ -11,7 +10,7 @@ from tsg.config import PARSED_DIR
 
 def extract_content(input_file):
     main_xpath = '//div[@id="main"]//text()'
-    title_xpath = '//h1/text()'
+    title_xpath = '//h1//text()'
     listings_xpath = '//li[contains(@class, "entry")]'
 
     parser = etree.HTMLParser()
@@ -62,6 +61,7 @@ def parse_document(document_type, input_path):
     parsed = parse_text(words)
     parsed_title = parse_text(title)
     parsed_url = url_from_filename(input_path)
+    uuid = os.path.splitext(os.path.basename(input_path))[0]
 
     data = {
         'listings_count': listings_count,
@@ -69,7 +69,7 @@ def parse_document(document_type, input_path):
         'content': parsed,
         'title': parsed_title,
         'url': parsed_url,
-        'uuid': str(uuid.uuid4()),
+        'uuid': uuid,
         'type': document_type
     }
     output_path = '{}{}.json'.format(PARSED_DIR, data['uuid'])
