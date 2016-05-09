@@ -3,7 +3,7 @@ import shutil
 import sys
 from os.path import expanduser
 
-TESTING = sys.argv[0].endswith('nosetests')
+TESTING = 'nosetests' in sys.argv[0]
 if TESTING:
     DATA_DIR = '/tmp/tsgtest123aeiae31ea/'
     shutil.rmtree(DATA_DIR, ignore_errors=True)
