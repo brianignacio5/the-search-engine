@@ -1,5 +1,6 @@
 from tsg.parser import parse_text
 from tsg.ranker import rank
+from tsg.config import MIN_RESULTS
 
 def search(searchphrase, dictionary_path, indexinfo_path):
     """
@@ -14,8 +15,13 @@ def search(searchphrase, dictionary_path, indexinfo_path):
 
     parsed_query = parse_text(searchphrase).split(' ')
 
-    # TODO Modify get_dictionary_term_list in tsg.ranker.base to
-    # use the hash dictionary and read a position in dictionary
-    # instead of line by line
 
-    return rank(parsed_query, dictionary_path, indexinfo_path)
+
+    results = rank(parsed_query, dictionary_path, indexinfo_path, 'and')
+    if len(MIN_RESULTS) < MIN_RESULTS:
+        results = rank(parsed_query,
+                       dictionary_path,
+                       indexinfo_path,
+                       'or')
+
+    return results

@@ -147,10 +147,10 @@ def rank(query_terms, index_dictionary_path=DICTIONARY_PATH,
 
     if rank_method == "and":
         and_scored_docs = and_score_calc(query_terms, index_dictionary_path, index_info_path)
-        sorted_docs = sorted(and_scored_docs.items(), key = operator.itemgetter(1, 0), reverse = True)
+        sorted_docs = sorted(and_scored_docs.items(), key = operator.itemgetter(1), reverse = True)
     elif rank_method == "or":
         or_scored_docs = or_score_calc(query_terms, index_dictionary_path, index_info_path)
-        sorted_docs = sorted(or_scored_docs.items(), key = operator.itemgetter(1, 0), reverse = True)
+        sorted_docs = sorted(or_scored_docs.items(), key = operator.itemgetter(1), reverse = True)
     elif rank_method == "and_or_extended":
         and_scored_docs = and_score_calc(query_terms, index_dictionary_path, index_info_path)
         or_scored_docs = or_score_calc(query_terms, index_dictionary_path, index_info_path)
