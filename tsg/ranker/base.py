@@ -2,6 +2,7 @@ import math
 import numpy as np
 import json
 import operator
+import re
 
 from tsg.config import DICTIONARY_PATH, INDEXINFO_PATH
 from tsg.ranker.hasher import hash_index_terms
@@ -19,8 +20,8 @@ def get_dictionary_term_list(term,index_dictionary_path=DICTIONARY_PATH):
 
         assert term == line_term
 
-        for doc_data in documents.split(','):
-            uuid, weight = doc_data.split(':')
+        for uuid, weight in re.findall('(?:,|^)(.*?):([0-9]+\.[0-9]*)',
+                                      documents):
             document_list[uuid] = float(weight)
 
     return document_list
@@ -47,9 +48,9 @@ def calculate_query_term_weight(term, query_terms, index_dictionary_path=DICTION
 
     return weight
 
-def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH, 
+def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH,
     index_info_path = INDEXINFO_PATH):
-    
+
     common__doc_keys = set()
     terms_documents = {}
     and_scored_docs = {}
@@ -154,8 +155,5 @@ def rank(query_terms, index_dictionary_path=DICTIONARY_PATH,
         and_scored_docs = and_score_calc(query_terms, index_dictionary_path, index_info_path)
         or_scored_docs = or_score_calc(query_terms, index_dictionary_path, index_info_path)
         sorted_docs = combine_and_or_scores(and_scored_docs, or_scored_docs)
-
-    # TODO Add PageRank scores
-    # loop: for each key (docID) add pagerank(docId) score.
 
     return sorted_docs

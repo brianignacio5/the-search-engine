@@ -32,3 +32,5 @@ QSCORE_PATH = DATA_DIR + 'qscores.csv'
 THROTTLE_SECONDS = 1.6  # default throttle time, gets replaced by robots.txt
 ALLOWED_SITES = []
 DISALLOWED_SITES = []
+
+MIN_RESULTS = 10
