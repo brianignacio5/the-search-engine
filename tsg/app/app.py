@@ -50,14 +50,12 @@ def index():
 '''
 @app.route("/")
 def index():
-	#if searchword is not None:
-	
 	return render_template('index.html')
 
-
-@app.route("/search")
-def search():
-	return render_template('results.html')
+@app.route('/queryresult/', methods=['POST'])
+def queryresult():
+    query=request.form['searchquery']
+    return render_template('queryresult.html', query = query)
 
 
 #searchapi
