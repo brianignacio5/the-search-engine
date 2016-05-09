@@ -35,11 +35,9 @@ def get_number_of_docs(index_dictionary_path):
     return dict_f["num_documents"]
 
 
-def calculate_query_term_weight(term, query_terms, index_dictionary_path=DICTIONARY_PATH,
-    index_info_path = INDEXINFO_PATH):
-    term_dictionary = get_dictionary_term_list(term, index_dictionary_path)
+def calculate_query_term_weight(term, query_terms, doc_freq,
+    index_dictionary_path=DICTIONARY_PATH, index_info_path = INDEXINFO_PATH):
     N = get_number_of_docs(index_info_path)
-    doc_freq = len(term_dictionary)
     term_freq = query_terms.count(term)
     try:
         weight = (1+ np.log10(term_freq))*math.log10(N/doc_freq)
@@ -67,8 +65,9 @@ def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH,
     for key in common__doc_keys:
         for term in query_terms:
             if key in terms_documents[term].keys():
+                doc_freq = len(terms_documents[term])
                 query_term_weight = calculate_query_term_weight(term,query_terms,
-            index_dictionary_path, index_info_path)
+                    doc_freq, index_dictionary_path, index_info_path)
                 if key in and_scored_docs:
                     and_scored_docs[key] += float(terms_documents[term][key])*float(query_term_weight)
                 else:
@@ -96,9 +95,10 @@ def or_score_calc(query_terms, index_dictionary_path=DICTIONARY_PATH,
     query_length = {} # Holds score^2 for Length normalization at end
     doc_length = {}
     for term in query_terms:
-        query_term_weight = calculate_query_term_weight(term,query_terms,
-            index_dictionary_path, index_info_path)
         term_documents = get_dictionary_term_list(term, index_dictionary_path)
+        doc_freq = len(term_documents)
+        query_term_weight = calculate_query_term_weight(term,query_terms,
+            doc_freq, index_dictionary_path, index_info_path)
         for key, value in term_documents.items():
             if key in or_scored_docs:
                 or_scored_docs[key] += float(value)*float(query_term_weight)

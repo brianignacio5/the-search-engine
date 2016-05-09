@@ -63,7 +63,10 @@ def test_term_query_weight():
 
     #query = 'term to evaluate'
     query_terms = ['term', 'to', 'evaluate']
-    term_weight = calculate_query_term_weight('term',query_terms,TEST_DICT_PATH, TEST_INDEXINFO_PATH)
+    term_doc_list = get_dictionary_term_list('term', TEST_DICT_PATH)
+    term_doc_freq = len(term_doc_list)
+    term_weight = calculate_query_term_weight('term',query_terms, term_doc_freq, 
+        TEST_DICT_PATH, TEST_INDEXINFO_PATH)
 
     eq_(round(term_weight,4), round(weight,4))
 
