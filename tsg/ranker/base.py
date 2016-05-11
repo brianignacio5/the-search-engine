@@ -15,14 +15,17 @@ def get_dictionary_term_list(term,index_dictionary_path=DICTIONARY_PATH):
 
     document_list = {}
     with open(index_dictionary_path) as dict_f:
-        dict_f.seek(get_dictionary_term_list.index_hash[term][0])
-        line_term, documents = dict_f.readline().replace('\n', '').split(' ')
+        try:
+            dict_f.seek(get_dictionary_term_list.index_hash[term][0])
+            line_term, documents = dict_f.readline().replace('\n', '').split(' ')
 
-        assert term == line_term
+            assert term == line_term
 
-        for uuid, weight in re.findall('(?:,|^)(.*?):([0-9]+\.[0-9]*)',
-                                      documents):
-            document_list[uuid] = float(weight)
+            for uuid, weight in re.findall('(?:,|^)(.*?):([0-9]+\.[0-9]*)',
+                documents):
+                document_list[uuid] = float(weight)
+        except Exception:
+            pass
 
     return document_list
 get_dictionary_term_list.index_hash = None
@@ -39,8 +42,9 @@ def calculate_query_term_weight(term, query_terms, doc_freq,
     index_dictionary_path=DICTIONARY_PATH, index_info_path = INDEXINFO_PATH):
     N = get_number_of_docs(index_info_path)
     term_freq = query_terms.count(term)
+    doc_num_of_words = len(query_terms)
     try:
-        weight = (1+ np.log10(term_freq))*math.log10(N/doc_freq)
+        weight = (term_freq/doc_num_of_words)*(1+math.log10(N/doc_freq))
     except ZeroDivisionError:
         weight = 0
 
@@ -127,8 +131,8 @@ def combine_and_or_scores(and_dict, or_dict):
         if key not in and_dict.keys():
             or_docs_not_in_and_docs[key] = value
 
-    sorted_and = sorted(and_dict.items(), key = operator.itemgetter(1,0), reverse = True)
-    sorted_or = sorted(or_docs_not_in_and_docs.items(), key= operator.itemgetter(1,0), reverse= True)
+    sorted_and = sorted(and_dict.items(), key = operator.itemgetter(1,0))
+    sorted_or = sorted(or_docs_not_in_and_docs.items(), key= operator.itemgetter(1,0))
 
     combined_and_or_docs = sorted_and + sorted_or
 
