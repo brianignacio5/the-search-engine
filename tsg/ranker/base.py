@@ -1,6 +1,4 @@
 import math
-import numpy as np
-import json
 import operator
 import re
 
@@ -30,26 +28,6 @@ def get_dictionary_term_list(term,index_dictionary_path=DICTIONARY_PATH):
     return document_list
 get_dictionary_term_list.index_hash = None
 
-def get_number_of_docs(index_dictionary_path):
-    dict_f = { }
-    with open(index_dictionary_path) as info:
-        dict_f = json.load(info)
-
-    return dict_f["num_documents"]
-
-
-def calculate_query_term_weight(term, query_terms, doc_freq,
-    index_dictionary_path=DICTIONARY_PATH, index_info_path = INDEXINFO_PATH):
-    N = get_number_of_docs(index_info_path)
-    term_freq = query_terms.count(term)
-    doc_num_of_words = len(query_terms)
-    try:
-        weight = (term_freq/doc_num_of_words)*(1+math.log10(N/doc_freq))
-    except ZeroDivisionError:
-        weight = 0
-
-    return weight
-
 def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH,
     index_info_path = INDEXINFO_PATH):
 
@@ -57,7 +35,6 @@ def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH,
     terms_documents = {}
     and_scored_docs = {}
     doc_length = {}
-    query_length = {}
 
     for term in query_terms:
         terms_documents[term] = get_dictionary_term_list(term, index_dictionary_path)
@@ -69,24 +46,19 @@ def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH,
     for key in common__doc_keys:
         for term in query_terms:
             if key in terms_documents[term].keys():
-                doc_freq = len(terms_documents[term])
-                query_term_weight = calculate_query_term_weight(term,query_terms,
-                    doc_freq, index_dictionary_path, index_info_path)
                 if key in and_scored_docs:
-                    and_scored_docs[key] += float(terms_documents[term][key])*float(query_term_weight)
+                    and_scored_docs[key] += float(terms_documents[term][key])
                 else:
-                    and_scored_docs[key] = float(terms_documents[term][key])*float(query_term_weight)
+                    and_scored_docs[key] = float(terms_documents[term][key])
 
                 if key in doc_length:
                     doc_length[key] += math.pow(float(terms_documents[term][key]), float(2))
-                    query_length[key] += math.pow(float(query_term_weight), float(2))
                 else:
                     doc_length[key] = math.pow(float(terms_documents[term][key]), float(2))
-                    query_length[key] = math.pow(float(query_term_weight), float(2))
 
     for key in and_scored_docs:
         try:
-            and_scored_docs[key] = and_scored_docs[key] / (math.sqrt(doc_length[key])*math.sqrt(query_length[key]))
+            and_scored_docs[key] = and_scored_docs[key] / doc_length[key]
         except ZeroDivisionError:
             and_scored_docs[key] = 0
 
@@ -96,29 +68,23 @@ def or_score_calc(query_terms, index_dictionary_path=DICTIONARY_PATH,
     index_info_path = INDEXINFO_PATH):
 
     or_scored_docs = {}
-    query_length = {} # Holds score^2 for Length normalization at end
-    doc_length = {}
+    doc_length = {} # Holds score^2 for Length normalization at end
     for term in query_terms:
         term_documents = get_dictionary_term_list(term, index_dictionary_path)
-        doc_freq = len(term_documents)
-        query_term_weight = calculate_query_term_weight(term,query_terms,
-            doc_freq, index_dictionary_path, index_info_path)
         for key, value in term_documents.items():
             if key in or_scored_docs:
-                or_scored_docs[key] += float(value)*float(query_term_weight)
+                or_scored_docs[key] += float(value)
             else:
-                or_scored_docs[key] = float(value)*float(query_term_weight)
+                or_scored_docs[key] = float(value)
 
-            if key in query_length:
-                query_length[key] += math.pow(float(query_term_weight), float(2))
+            if key in doc_length:
                 doc_length[key] += math.pow(float(value),float(2))
             else:
-                query_length[key] = math.pow(float(query_term_weight), float(2))
                 doc_length[key] = math.pow(float(value), float(2))
 
     for key in or_scored_docs:
         try:
-            or_scored_docs[key] = or_scored_docs[key] / (math.sqrt(query_length[key])*math.sqrt(doc_length[key]))
+            or_scored_docs[key] = or_scored_docs[key] / doc_length[key]
         except ZeroDivisionError:
             or_scored_docs[key] = 0
 
