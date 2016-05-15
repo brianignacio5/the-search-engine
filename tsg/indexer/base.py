@@ -28,7 +28,7 @@ def parse_term(term_file, N, qscores, pagerank_scores):
         log_weights * \
         df_qscores * \
         df_pagerank_scores * \
-        math.log10(N/len(term_df))
+        (1+math.log10(N/len(term_df)))
 
     term_df.sort_values('tf-idf', ascending=False, inplace=True)
 
