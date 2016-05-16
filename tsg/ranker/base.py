@@ -66,7 +66,7 @@ def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH,
 
     for key in common__doc_keys:
         for term in query_terms:
-            if key in terms_documents[term].keys():
+            if key in terms_documents[term]:
                 query_term_weight = calculate_query_term_weight(term,query_terms,
             index_dictionary_path, index_info_path)
                 if key in and_scored_docs:
