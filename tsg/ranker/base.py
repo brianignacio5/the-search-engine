@@ -45,7 +45,7 @@ def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH,
 
     for key in common__doc_keys:
         for term in query_terms:
-            if key in terms_documents[term].keys():
+            if key in terms_documents[term]:
                 if key in and_scored_docs:
                     and_scored_docs[key] += float(terms_documents[term][key])
                 else:
