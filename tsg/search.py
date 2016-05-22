@@ -21,7 +21,6 @@ def search(searchphrase, dictionary_path, indexinfo_path):
     if len(results) < MIN_RESULTS:
         results = rank(parsed_query,
                        dictionary_path,
-                       indexinfo_path,
                        'or')
 
     return results
