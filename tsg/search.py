@@ -17,7 +17,7 @@ def search(searchphrase, dictionary_path, indexinfo_path):
 
 
 
-    results = rank(parsed_query, dictionary_path, indexinfo_path, 'and')
+    results = rank(parsed_query, dictionary_path, 'and')
     if len(results) < MIN_RESULTS:
         results = rank(parsed_query,
                        dictionary_path,
