@@ -24,6 +24,7 @@ setup(
                       'mock',
                       'pandas',
                       'numpy',
+                      'flask',
                       'validators',
                       'scipy']
 )
