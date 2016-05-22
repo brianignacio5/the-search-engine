@@ -33,20 +33,25 @@ def test_parse_term():
                                           '31a8e3b4-8c67-4fb7-b11a-1df1105617a2'])
     pagerank_scores.index.name = 'uuid'
 
+    # scale pagerank_scores
+    scaled_pagerank_scores = np.log10(pagerank_scores)
+    scaled_pagerank_scores += 1 - np.min(scaled_pagerank_scores)#
+
+
     termline = parse_term(term_file, N, qscores, pagerank_scores)
 
     w1 = (1+math.log10(w1count)) * \
-        math.log10(N/2) * \
+        (1+math.log10(N/2)) * \
         qscores.loc['598859a0-eaa7-466a-8919-e6260c89edef'].qscore * \
-        pagerank_scores.loc['598859a0-eaa7-466a-8919-e6260c89edef'].pagerank_score
+        scaled_pagerank_scores.loc['598859a0-eaa7-466a-8919-e6260c89edef'].pagerank_score
 
     w2 = (1+math.log10(w2count)) * \
-        math.log10(N/2) * \
+        (1+math.log10(N/2)) * \
         qscores.loc['31a8e3b4-8c67-4fb7-b11a-1df1105617a2'].qscore * \
-        pagerank_scores.loc['31a8e3b4-8c67-4fb7-b11a-1df1105617a2'].pagerank_score
+        scaled_pagerank_scores.loc['31a8e3b4-8c67-4fb7-b11a-1df1105617a2'].pagerank_score
 
     # overwrite weights because of numerical issue
-    w2 = 0.18126459066485565
+    #w2 = 0.18126459066485565
 
     eq_(termline,
         '598859a0-eaa7-466a-8919-e6260c89edef:{},'

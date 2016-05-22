@@ -24,11 +24,15 @@ def parse_term(term_file, N, qscores, pagerank_scores):
     df_pagerank_scores = term_df.apply(lambda row: pagerank_scores.loc[row.name].pagerank_score,
                                        axis=1)
 
+    # log page rank scores and move minimum to 1
+    df_pagerank_scores = np.log10(df_pagerank_scores)
+    df_pagerank_scores += 1 - np.min(df_pagerank_scores)
+
     term_df['tf-idf'] = \
         log_weights * \
         df_qscores * \
         df_pagerank_scores * \
-        math.log10(N/len(term_df))
+        (1+math.log10(N/len(term_df)))
 
     term_df.sort_values('tf-idf', ascending=False, inplace=True)
 
