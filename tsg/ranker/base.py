@@ -28,7 +28,7 @@ get_dictionary_term_list.index_hash = None
 
 def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH):
 
-    common__doc_keys = set()
+    common_doc_keys = set()
     terms_documents = {}
     and_scored_docs = {}
     doc_length = {}
@@ -36,12 +36,12 @@ def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH):
 
     for term in query_terms:
         terms_documents[term] = get_dictionary_term_list(term, index_dictionary_path)
-        if len(common__doc_keys) == 0:
-            common__doc_keys = terms_documents[term].keys()
+        if len(common_doc_keys) == 0:
+            common_doc_keys = terms_documents[term].keys()
         else:
-            common__doc_keys &= terms_documents[term].keys()
+            common_doc_keys &= terms_documents[term].keys()
 
-    for key in common__doc_keys:
+    for key in common_doc_keys:
         for term in query_terms:
             if key in terms_documents[term]:
                 if key in and_scored_docs:
@@ -53,10 +53,10 @@ def and_score_calc(query_terms, index_dictionary_path= DICTIONARY_PATH):
                     doc_length[key] += float(terms_documents[term][key])
                 else:
                     doc_length[key] = float(terms_documents[term][key])
-    
+
     if len(doc_length) > 0:
         MaxLength = max(doc_length.values())
-    
+
     for key in and_scored_docs:
         try:
             and_scored_docs[key] = and_scored_docs[key] / MaxLength
