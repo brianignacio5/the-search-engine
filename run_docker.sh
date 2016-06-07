@@ -10,4 +10,4 @@ docker build -t tsg .
 
 mkdir "$DATA_DIR" 2> /dev/null
 #docker run -v "$DATA_DIR":/root/tsgdata tsg tsg_crawl author --startnumber "$NUM_POINTS"
-docker run -v "$DATA_DIR":/root/tsgdata tsg "${@:2}"
+docker run -v "$DATA_DIR":/root/tsgdata -p 8910:8910 tsg "${@:2}"
