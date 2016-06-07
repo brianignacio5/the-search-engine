@@ -1,10 +1,11 @@
 from functools import wraps
 import logging
 
-from flask import request, Response, Flask, jsonify
+from flask import request, Response, Flask, jsonify, render_template
 
 from tsg.search import search
 from tsg.config import DICTIONARY_PATH, INDEXINFO_PATH
+from tsg.frontend.base import generate_detailed_list
 
 
 app = Flask(__name__)
@@ -36,10 +37,38 @@ def requires_auth(f):
     return decorated
 
 
-@app.route('/search')
+@app.route('/api/search')
 @requires_auth
 def api_search():
     query = request.args.get('query', '')
     logging.info('Searching for \'{}\''.format(query))
     results = search(query, DICTIONARY_PATH, INDEXINFO_PATH)
     return jsonify(results=results)
+
+
+@app.route('/')
+@app.route('/index.html')
+def index():
+    'show front page'
+    return render_template('index.html')
+
+
+@app.route('/search.html')
+def html_search():
+    'show results'
+    query = request.args.get('query', '')
+    start = int(request.args.get('start', '0'))
+    length = int(request.args.get('length', '20'))
+
+    logging.info('Searching for \'{}\''.format(query))
+    results = search(query, DICTIONARY_PATH, INDEXINFO_PATH)
+
+    detailed_list = generate_detailed_list(results, query, start, length)
+
+    # TODO render template with arguments: len(results), next_link,
+    # detailed_list, query
+
+    return render_template('search.html',
+                           query=query,
+                           results=detailed_list,
+                           )

@@ -83,7 +83,10 @@ def or_score_calc(query_terms, index_dictionary_path=DICTIONARY_PATH):
             else:
                 doc_length[key] = float(value)
 
-    MaxLength = max(doc_length.values())
+    try:
+        MaxLength = max(doc_length.values())
+    except:
+        MaxLength = 0
 
     for key in or_scored_docs:
         try:
