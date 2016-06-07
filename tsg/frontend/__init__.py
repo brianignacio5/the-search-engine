@@ -71,4 +71,6 @@ def html_search():
     return render_template('search.html',
                            query=query,
                            results=detailed_list,
+                           start=start,
+                           length=length
                            )

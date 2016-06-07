@@ -138,3 +138,11 @@ div.container {
     background-color: #4285F4;
 }
 
+
+span.score {
+	float: right;
+}
+
+.results {
+    width: 67%;
+}
