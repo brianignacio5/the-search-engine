@@ -25,7 +25,9 @@
                 <div class = "results">
                 {% for res in results %}
                       <div class="result">
+                        <span class="head">
                         <b>{{res.cat}}:</b> <a href="{{res.url}}">{{res.title}}</a>
+                        </span>
                         <span class="score">{{res.score}}</span>
                         <p class="preview">{{res.preview|safe}}</p>
                       </div>
