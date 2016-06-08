@@ -34,3 +34,6 @@ ALLOWED_SITES = []
 DISALLOWED_SITES = []
 
 MIN_RESULTS = 10
+
+# how many docs per term are searched
+RANKER_K = 100000

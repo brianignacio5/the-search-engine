@@ -1,6 +1,7 @@
 import operator
 import re
-from tsg.config import DICTIONARY_PATH
+import logging
+from tsg.config import DICTIONARY_PATH, RANKER_K
 from tsg.ranker.hasher import hash_index_terms
 
 
@@ -17,10 +18,20 @@ def get_dictionary_term_list(term,index_dictionary_path=DICTIONARY_PATH):
 
             assert term == line_term
 
-            for uuid, weight in re.findall('(?:,|^)(.*?):([0-9]+\.[0-9]*)',
-                documents):
-                document_list[uuid] = float(weight)
-        except Exception:
+            i = 0
+            try:
+                for match in re.finditer('(?:,|^)(.*?):([0-9]+\.[0-9]*)',
+                    documents):
+                    uuid, weight = match.groups()
+                    document_list[uuid] = float(weight)
+                    if i > RANKER_K:
+                        raise StopIteration
+                    i += 1
+            except StopIteration:
+                pass
+
+        except Exception as e:
+            logging.warn('Surpressed exception: {}'.format(e))
             pass
 
     return document_list
