@@ -1,0 +1,2 @@
+recursive-include tsg/frontend/templates *
+recursive-include tsg/frontend/static *
