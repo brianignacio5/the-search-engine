@@ -4,7 +4,7 @@ import logging
 from flask import request, Response, Flask, jsonify, render_template
 
 from tsg.search import search
-from tsg.config import DICTIONARY_PATH, INDEXINFO_PATH
+from tsg.config import DICTIONARY_PATH, INDEXINFO_PATH, RANKER_K
 from tsg.frontend.base import generate_detailed_list
 
 
@@ -69,11 +69,14 @@ def html_search():
 
     # TODO render template with arguments: len(results), next_link,
     # detailed_list, query
+    count = len(results)
+    if count >= RANKER_K:
+        count = 'more than {}'.format(count)
 
     return render_template('search.html',
                            query=query,
                            results=detailed_list,
                            start=start,
                            length=length,
-                           count=len(results)
+                           count=count
                            )
