@@ -10,12 +10,14 @@ def _generate_detailed_item(doc_id, doc_weight, search_terms):
         content = detailed_data['content']
 
         # generate a content preview
-        term_pos = content.find(' {} '.format(search_terms[0]))+1
-        preview = '{}<b>{}</b>{}'.format(
-            content[term_pos-100:term_pos], # before
-            content[term_pos:term_pos+len(search_terms[0])],
-            content[term_pos+len(search_terms[0]):term_pos+len(search_terms[0])+100]
-        )
+        preview = '...'
+        for term in search_terms:
+            term_pos = content.find(' {} '.format(term))+1
+            preview += '{}<b>{}</b>{}...'.format(
+                content[term_pos-100:term_pos], # before
+                content[term_pos:term_pos+len(term)],
+                content[term_pos+len(term):term_pos+len(term)+100]
+            )
 
         return {
             'title': detailed_data['title'],

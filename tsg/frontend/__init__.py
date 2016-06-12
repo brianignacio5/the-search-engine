@@ -48,12 +48,14 @@ def api_search():
 
 @app.route('/')
 @app.route('/index.html')
+@requires_auth
 def index():
     'show front page'
     return render_template('index.html')
 
 
 @app.route('/search.html')
+@requires_auth
 def html_search():
     'show results'
     query = request.args.get('query', '')
@@ -72,5 +74,6 @@ def html_search():
                            query=query,
                            results=detailed_list,
                            start=start,
-                           length=length
+                           length=length,
+                           count=len(results)
                            )
